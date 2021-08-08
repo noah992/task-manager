@@ -1,0 +1,22 @@
+<div class="header">
+  <div class="header-container">
+      <div class="logo">
+          <p>Task Manager</p>
+      </div>
+      <div class="navigation">
+          <div class="nav-item" *ngFor='let item of nav' [routerLink]='item.link'>
+            {{item.page}}
+          </div>
+      </div>
+      <div class="option">
+        <div class="option-container">
+          <div class="option-item">
+            <p *ngIf='isLoggedIn'>{{activeUser | capitalize}}</p>
+            <button mat-raised-button (click)='login()' *ngIf='!isLoggedIn'>Log In</button>
+            <button mat-raised-button *ngIf='isLoggedIn' (click)='logout()'>Log Out</button>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+<router-outlet></router-outlet>

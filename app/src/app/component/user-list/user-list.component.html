@@ -1,0 +1,15 @@
+<div class="user-list">
+    <div class="user-list-container">
+        <div class="user-list-header">
+            Default Users
+        </div>
+        <div class="user-item-header">
+            <p>username</p>
+            <p>password</p>
+        </div>
+        <div class="user-item" *ngFor='let item of user'>
+            <p>{{item.username}}</p>
+            <p>{{item.password}}</p>
+        </div>
+    </div>
+</div>

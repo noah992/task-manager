@@ -1,0 +1,22 @@
+.lorem {
+    padding: 1rem;
+}
+
+.lorem-container {
+    display: flex;
+}
+
+.lorem-container p {
+    font-size: 1.5rem;
+}
+
+.lorem-left {
+    flex: 1;
+    padding: 3rem;
+    border: 1px solid teal;
+    border-radius: 16px;
+}
+
+.lorem-right {
+    flex: 1;
+}

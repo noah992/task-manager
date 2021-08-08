@@ -1,0 +1,10 @@
+<div class="lorem">
+    <div class="lorem-container">
+        <div class="lorem-left">
+            <p *ngFor='let word of content; let i = index'>
+                {{i % 10 == 0 ? content.slice(i, i+10).join(' ') : null}}
+            </p>
+        </div>
+        <div class="lorem-right"></div>
+    </div>
+</div>

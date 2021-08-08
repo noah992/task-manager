@@ -1,0 +1,42 @@
+.user-list {
+    padding: 1rem;
+}
+
+.user-list-container {
+    display: flex;
+    flex-direction: column;
+    padding: 3rem;
+    background-color: teal;
+    border-radius: 16px;
+}
+
+.user-list-header {
+    font-size: 2rem;
+    color: white;
+    margin-bottom: 2rem;
+}
+
+.user-item-header {
+    display: flex;
+}
+
+.user-item-header p {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    margin-right: 1rem;
+    width: 10rem;
+    color: white;
+}
+
+.user-item {
+    display: flex;
+}
+
+.user-item p {
+    font-size: 1.5rem;
+    margin-bottom: .5rem;
+    margin-right: 1rem;
+    width: 10rem;
+    border-bottom: 1px solid white;
+    color: white;
+}

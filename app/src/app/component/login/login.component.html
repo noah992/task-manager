@@ -1,0 +1,19 @@
+<div class="login">
+    <div class="login-container">
+        <p>Log In</p>
+        <div class="login-row">
+            <mat-form-field appearance="outline">
+                <mat-label>username</mat-label>
+                <input matInput [formControl]='username' (keyup)='switchButton()'>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>password</mat-label>
+                <input matInput [formControl]='password' (keyup)='switchButton()'>
+            </mat-form-field>
+        </div>
+        <div class="login-row">
+            <button mat-raised-button (click)='login()' [disabled]='isActiveButton'>Log In</button>
+        </div>
+        <div class="invalid-user" *ngIf='isInvalidUser'>username or password is wrong</div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+.login {
+    padding: 1rem;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.login-container p {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.login-row {
+    display: flex;
+}
+
+.login-row * {
+    width: 25rem;
+    margin-right: 1rem;
+}
+
+.invalid-user {
+    padding: .5rem 0;
+    color: red;
+}

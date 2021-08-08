@@ -1,0 +1,53 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+*,
+*::before,
+*::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+}
+
+div {
+    caret-color: transparent;
+}
+
+a,
+button {
+    cursor: pointer;
+}
+
+ul {
+    list-style: none;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(200, 200, 200, .5);
+    border-radius: 16px;
+    border: 1px solid #fff;
+}
+
+::-webkit-scrollbar-button {
+    display:none;
+}
+
+.scroll-bar {
+    overflow-y: scroll;
+}
+
+.scroll-bar::-webkit-scrollbar-thumb {
+    background-color: transparent;
+}
+
+.scroll-bar:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(200, 200, 200, .5);
+}
