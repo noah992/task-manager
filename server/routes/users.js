@@ -8,20 +8,6 @@ var tokenizedUsers = data.tokenizedUsers;
 
 const SECRET_KEY = 'angularfinalevaluation';
 
-// let tempUser = [
-//   {id:1, username:'admin', password:'helloworld' },
-//   {id:2, username:'whale', password:'mammal' },
-//   {id:3, username:'frog', password:'amphobian' },
-//   {id:4, username:'lizard', password:'reptile' },
-// ]
-
-// var userId = 5
-
-// let tokenizedUsers = tempUser.map(item => {
-//   const token = jwt.sign({ username: item.username, password: item.password }, SECRET_KEY)
-//   return { id:item.id, token: token}
-// })
-
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send(tempUser)
@@ -48,8 +34,7 @@ router.post('/signup', function(req, res, next) {
   tempUser.push({ id: userId, username: usernameReq, password: passwordReq })
   const token = jwt.sign({ username: usernameReq, password: passwordReq}, SECRET_KEY)
   tokenizedUsers = [...tokenizedUsers, { id: userId++, token: token }]
-  data.tempUser = tempUser
-  data.tokenizedUsers = tokenizedUsers
+  updateDatabase()
   res.send({ id: userId -1 })
 })
 
@@ -69,18 +54,23 @@ router.post('/edit', function(req, res, next) {
       return item
     }
   })
+  updateDatabase()
   res.send({ id: req.body.id})
 })
 
 router.delete('', function(req, res, next) {
   tempUser = tempUser.filter(item => item.id !== req.body.id)
   tokenizedUsers = tokenizedUsers.filter(item => item.id !== req.body.id)
+  updateDatabase()
   res.send({ id: req.body.id })
 })
 
 
-function tokenize(char) {
-  return jwt.sign(char, SECRET_KEY)
+function updateDatabase() {
+  data.tempUser = tempUser
+  data.tokenizedUsers = tokenizedUsers
+  data.userId = userId - 1
+  console.log(userId)
 }
 
 module.exports = router;
