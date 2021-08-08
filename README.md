@@ -19,4 +19,3 @@ ng serve --open
 * Authorization
 * Authentication
 * Http interceptors
-* 
