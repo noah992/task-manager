@@ -17,8 +17,9 @@ ng serve --open
 
 ## Features
 * Authorization
-* * Guard
-* * API for users at http://localhost:3000/users
+  * Guard
+  * API for user credentials at http://localhost:3000/users
 * Authentication 
+  * API for tasks at http://localhost:3000/task 
 * Http interceptor
 * Dynamic form
