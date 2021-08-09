@@ -3,53 +3,91 @@
         <div *ngIf='!task' class='spinner'>
             <mat-spinner></mat-spinner>
         </div>
-        <mat-tab-group animationDuration='1000ms'>
-            <mat-tab label='Task'>
-                <div class="task-list scroll-bar">
-                    <div *ngIf='incompletedTask' class='task-num'>
-                        {{incompletedTask.length}} Tasks
+        <div class="task-workspace">
+            <mat-tab-group animationDuration='1000ms'>
+                <mat-tab label='Task'>
+                    <div class="task-list">
+                        <div *ngIf='incompletedTask' class='task-num'>
+                            {{incompletedTask.length}} Tasks
+                        </div>
+                        <mat-form-field appearance="outline">
+                            <mat-label>Add new task</mat-label>
+                            <input matInput [formControl]='newTask' (keyup)='addTask($event)'>
+                        </mat-form-field>
+                        <div class="scroll-bar">
+                            <div class="task-item" *ngFor='let item of incompletedTask' (click)='generateEditTask(item)'>
+                                <p>{{item.title}}</p>
+                                <div class="time">
+                                    {{item.date.split("?")[0]}}
+                                </div>
+                                <div class="time">
+                                    {{item.date.split("?")[1]}}
+                                </div>
+                                <button mat-raised-button (click)='completeTask(item.id)'>Complete</button>
+                            </div>
+                        </div>
                     </div>
-                    <mat-form-field appearance="outline">
-                        <mat-label>Add new task</mat-label>
-                        <input matInput [formControl]='newTask' (keyup)='addTask($event)'>
-                    </mat-form-field>
-                    <div class="scroll-bar">
-                        <div class="task-item" *ngFor='let item of incompletedTask'>
-                            <p>{{item.title}}</p>
-                            <div class="time">
-                                {{item.date.split("?")[0]}}
+                </mat-tab>
+                <mat-tab label='Completed'>
+                    <div class="task-list">
+                        <div *ngIf='completedTask' class='task-num'>
+                            {{completedTask.length}} Tasks
+                        </div>
+                        <div class="scroll-bar">
+                            <div class="task-item" *ngFor='let item of completedTask'>
+                                <p>{{item.title}}</p>
+                                <div class="time">
+                                    {{item.date.split("?")[0]}}
+                                </div>
+                                <div class="time">
+                                    {{item.date.split("?")[1]}}
+                                </div>
+                                <button mat-raised-button (click)='deleteTask(item.id)'>Delete</button>
                             </div>
-                            <div class="time">
-                                {{item.date.split("?")[1]}}
+                        </div>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+            <div class="task-edit">
+                <div class="task-edit-container">
+                    <div class="task-edit-group">
+                        <p>Detail</p>
+                        <div [formGroup]='taskEdit'>
+                            <div class="input-row">
+                                <p>Title:</p>
+                                <input formControlName='editTitle'>
                             </div>
-                            <button mat-raised-button (click)='completeTask(item.id)'>Complete</button>
+                            <div class="input-row">
+                                <p>Created Date:</p>
+                                <input formControlName='editCreatedDate'>
+                            </div>
+                            <div class="input-row">
+                                <p>Due Date:</p>
+                                <div>
+                                    <input matInput [matDatepicker]="picker" formControlName='editDueDate'>
+                                    <mat-datepicker-toggle [for]="picker" [ngStyle]='{color:"rgb(200, 240, 200)"}'></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </div>
+                            </div>
+                            <div class="input-row">
+                                <p>Contact:</p>
+                                <input formControlName='editContact'>
+                            </div>
+                            <div class="input-row">
+                                <p>Location:</p>
+                                <input formControlName='editLocation'>
+                            </div>
+                            <div class="input-row">
+                                <p>Desctiption:</p>
+                                <textarea matInput formControlName='editDescription'></textarea>
+                            </div>
+                        </div>
+                        <div class="button-wrapper">
+                            <button mat-raised-button (click)='editTask()'>Update</button>
                         </div>
                     </div>
                 </div>
-            </mat-tab>
-            <mat-tab label='Completed'>
-                <div class="task-list scroll-bar">
-                    <div *ngIf='completedTask' class='task-num'>
-                        {{completedTask.length}} Tasks
-                    </div>
-                    <!-- <mat-form-field appearance="outline">
-                        <mat-label>Add new task</mat-label>
-                        <input matInput [formControl]='newTask' (keyup)='addTask($event)'>
-                    </mat-form-field> -->
-                    <div class="scroll-bar">
-                        <div class="task-item" *ngFor='let item of completedTask'>
-                            <p>{{item.title}}</p>
-                            <div class="time">
-                                {{item.date.split("?")[0]}}
-                            </div>
-                            <div class="time">
-                                {{item.date.split("?")[1]}}
-                            </div>
-                            <button mat-raised-button (click)='deleteTask(item.id)'>Delete</button>
-                        </div>
-                    </div>
-                </div>
-            </mat-tab>
-        </mat-tab-group>
+            </div>
+        </div>
     </div>
 </div>

@@ -14,6 +14,20 @@
     align-items: center;
 }
 
+.task-workspace {
+    display: flex;
+    flex: 1;
+}
+
+.task-workspace > * {
+    padding: 0 3rem;
+}
+
+.task-edit {
+    flex: 1;
+    padding: 1rem 0;
+}
+
 .task-num {
     font-size: 1.5rem;
     padding: 1rem;
@@ -48,5 +62,55 @@
 }
 
 .scroll-bar {
-    height: 40rem;
+    height: 35rem;
 }
+
+.task-edit-group {
+    background-color: teal;
+    padding: 2rem;
+    border-radius: 16px;
+}
+
+.task-edit-group > p {
+    font-size: 2rem;
+    padding: 1rem 0;
+    color: white;
+}
+
+.task-edit input {
+    caret-color: white;
+    background-color: inherit;
+    color: white;
+    font-size: 1.5rem;
+    padding: .5rem 0;
+    border-bottom: 1px white solid;
+    width: 25rem;
+}
+
+.task-edit textarea {
+    caret-color: white;
+    background-color: inherit;
+    color: white;
+    font-size: 1.5rem;
+    padding: .5rem 0;
+    border-bottom: 1px white solid;
+    width: 25rem;
+    margin-top: 1rem;
+}
+
+.input-row {
+    display: flex;
+}
+
+.input-row p {
+    color: rgb(200, 240, 200);
+    width: 10rem;
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.task-edit .button-wrapper {
+    padding: 1rem 0;
+}
+

@@ -9,6 +9,8 @@ import { ComponentModule } from './component/component.module';
 import { HttpClientModule } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ApiInterceptor } from './shared/api.interceptor';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @NgModule({
   declarations: [
@@ -20,10 +22,13 @@ import { ApiInterceptor } from './shared/api.interceptor';
     AppRoutingModule,
     BrowserAnimationsModule,
     ComponentModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true}
+    { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true},
+    MatDatepickerModule,
   ],
   bootstrap: [AppComponent]
 })

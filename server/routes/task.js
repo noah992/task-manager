@@ -33,6 +33,22 @@ router.delete('/', function(req, res, next) {
     res.send(userTask)
 })
 
+router.post('/edit', function(req, res, next) {
+    console.log(req.body)
+    task =  task.map(item => {
+        if (item.id == req.body.id) {
+            return { ...item, ...req.body }
+        } else {
+            return item
+        }
+    })
+    const id = findId(req)
+    const userTask = task.filter(item => item.userId == id)
+    updateDatabase()
+    console.log(userTask)
+    res.send(userTask)
+})
+
 router.post('/completed', function(req, res, next) {
     task = task.map(item => {
         if (item.id == req.body.id) {
@@ -74,7 +90,7 @@ function updateDatabase() {
 
 function getTime() {
     const date = new Date()
-    return date.getHours()+':'+date.getMinutes()+'?'+date.getDate()+'/'+date.getMonth()
+    return date.getHours()+':'+date.getMinutes()+'?'+date.getDate()+'/'+date.getMonth()+"/"+date.getFullYear()
 }
 
 module.exports = router;

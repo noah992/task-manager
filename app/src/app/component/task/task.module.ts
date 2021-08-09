@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
-
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @NgModule({
   declarations: [
@@ -21,6 +21,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatInputModule,
     MatProgressSpinnerModule,
     MatTabsModule,
+    MatDatepickerModule,
   ]
 })
 export class TaskModule { }

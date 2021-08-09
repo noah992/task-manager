@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-task',
@@ -11,14 +11,20 @@ export class TaskComponent implements OnInit {
 
   task:any = []
   newTask:any
-  taskId = 201
   completedTask: any
   incompletedTask: any
+  taskEdit:any
+  editTitle:any
+  editCreatedDate:any
+  editDueDate:any
+  editLocation:any
+  editContact:any
+  editDescription:any
+  editId:any
 
   getTask() {
     this.http.get('http://localhost:3000/task').subscribe((data:any) => {
       this.task = data
-      console.log(this.task)
       this.updateTask()
     })
   }
@@ -34,11 +40,25 @@ export class TaskComponent implements OnInit {
   }
 
   completeTask(id:any) {
-    console.log(this.task.find((item:any) => item.id == id))
     this.http.post('http://localhost:3000/task/completed', { id: id }).subscribe((data: any) => {
       this.task = data
       this.updateTask()
-      console.log(this.task.find((item:any) => item.id == id))
+    })
+  }
+
+  editTask() {
+    const body = {
+      id: this.editId,
+      title: this.taskEdit.controls.editTitle.value ? this.taskEdit.controls.editTitle.value : null,
+      createdDate: this.taskEdit.controls.editCreatedDate.value ? this.taskEdit.controls.editCreatedDate.value : null,
+      dueDate: this.taskEdit.controls.editDueDate.value ? this.taskEdit.controls.editDueDate.value : null,
+      contact: this.taskEdit.controls.editContact.value ? this.taskEdit.controls.editContact.value : null,
+      location: this.taskEdit.controls.editLocation.value ? this.taskEdit.controls.editLocation.value : null,
+      description: this.taskEdit.controls.editDescription.value ? this.taskEdit.controls.editDescription.value : null,
+    }
+    this.http.post('http://localhost:3000/task/edit', body).subscribe((data: any) => {
+      this.task = data
+      this.updateTask()
     })
   }
 
@@ -54,11 +74,46 @@ export class TaskComponent implements OnInit {
     this.incompletedTask = this.task.filter((item:any) => item.completed == false)
   }
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private fb: FormBuilder) {
     this.getTask()
     this.newTask = new FormControl()
+    this.taskEdit = this.fb.group({
+      editTitle: [''],
+      editCreatedDate: [''],
+      editDueDate: [''],
+      editContact: [''],
+      editLocation: [''],
+      editDescription: [''],
+    })
   }
 
+  generateEditTask(task:any) {
+    const { id, title, contact, date, description, dueDate, location } = task
+    this.taskEdit.controls.editTitle.setValue(title ? title : '')
+    this.taskEdit.controls.editContact.setValue(contact ? contact : '')
+    this.taskEdit.controls.editCreatedDate.setValue(this.convertMonthDate(date) ? this.convertMonthDate(date) : '')
+    this.taskEdit.controls.editDescription.setValue(description ? description : '')
+    this.taskEdit.controls.editDueDate.setValue(dueDate ? dueDate : '')
+    this.taskEdit.controls.editLocation.setValue(location ? location : '')
+    this.editId = id
+    // this.updateTaskEdit()
+  }
+
+  convertMonthDate(time:any) {
+    return time.split("?")[0] + ' ' + time.split("?")[1].split('/')[1] + '/' + time.split("?")[1].split('/')[0]+ '/' + time.split("?")[1].split('/')[2]
+  }
+  
+  // updateTaskEdit() {
+  //   this.taskEdit = [
+  //     { label: 'Title', data: this.editTitle },
+  //     { label: 'Created Date', data: this.editCreatedDate },
+  //     { label: 'Due Date', data: this.editDueDate },
+  //     { label: 'Locatoin', data: this.editLocation },
+  //     { label: 'Contact', data: this.editContact },
+  //     { label: 'Description', data: this.editDescription },
+  //   ]
+  // }
+ 
   ngOnInit(): void {
   }
 

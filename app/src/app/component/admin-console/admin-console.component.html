@@ -1,62 +1,66 @@
 <div class="admin-console">
     <div class="admin-console-container">
         <div class="user-list">
-            <div class="user-list-header">
-                Default users
-            </div>
-            <div class="user-item bold">
-                <p>username</p>
-                <p>password</p>
-            </div>
-            <div class="user-item" *ngFor='let item of user'>
-                <p>{{item.username}}</p>
-                <p>{{item.password}}</p>
-                <button mat-raised-button (click)='activateEdit(item.id, item.username, item.password)'>Edit</button>
-                <button mat-raised-button (click)='deleteUser(item.id)'>Delete</button>
+            <div class="user-list-container">
+                <div class="user-list-header">
+                    Default users
+                </div>
+                <div class="user-item bold">
+                    <p>username</p>
+                    <p>password</p>
+                </div>
+                <div class="user-item" *ngFor='let item of user'>
+                    <p>{{item.username}}</p>
+                    <p>{{item.password}}</p>
+                    <button mat-raised-button (click)='activateEdit(item.id, item.username, item.password)'>Edit</button>
+                    <button mat-raised-button (click)='deleteUser(item.id)'>Delete</button>
+                </div>
             </div>
         </div>
-        <mat-tab-group animationDuration="0ms" (selectedTabChange)='switchTab($event)' [selectedIndex]="currentIndex">
-            <mat-tab label="Add user">
-                <div class="input-header">Add user</div>
-                <div class="input-row">
-                    <mat-form-field appearance='outline'>
-                        <mat-label>username</mat-label>
-                        <input matInput [formControl]='username' (keyup)='switchActiveButton()' (keyup)='switchIsValidUsername()'>
-                    </mat-form-field>
-                    <mat-form-field appearance='outline'>
-                        <mat-label>password</mat-label>
-                        <input matInput [formControl]='password' (keyup)='switchActiveButton()' #addPassword>
-                        <mat-hint [ngStyle]='{ color: addPassword.value.length < 4 ? "grey" : "black" }'>Min 4 characters: {{addPassword.value.length}} / 4</mat-hint>
-                    </mat-form-field>
-                </div>
-                <div class="button-wrapper">
-                    <button mat-raised-button color='primary' (click)='addUser()' [disabled]='isActiveButton'>Add</button>
-                </div>
-                <div class="invalid-username" *ngIf='!isValidUsername'>
-                    <p>This username is already taken</p>
-                </div>
-            </mat-tab>
-            <mat-tab label="Edit user" [disabled]='tab !== "edit"'>
-                <div class="input-header">Edit user</div>
-                <div class="user-info">
-                    <p>{{oldUsername}}</p>
-                    <p>{{oldPassword}}</p>
-                </div>
-                <div class="input-row">
-                    <mat-form-field appearance='outline'>
-                        <mat-label>username</mat-label>
-                        <input matInput [formControl]='username' (keyup)='switchActiveButton()'>
-                    </mat-form-field>
-                    <mat-form-field appearance='outline'>
-                        <mat-label>password</mat-label>
-                        <input matInput [formControl]='password' (keyup)='switchActiveButton()' #editPassword>
-                        <mat-hint [ngStyle]='{ color: editPassword.value.length < 4 ? "grey" : "black" }'>Min 4 characters: {{editPassword.value.length}} / 4</mat-hint>
-                    </mat-form-field>
-                </div>
-                <div class="button-wrapper">
-                    <button mat-raised-button color='primary' (click)='editUser()' [disabled]='isActiveButton'>Edit</button>
-                </div>
-            </mat-tab>
-          </mat-tab-group>
+        <div class='user-manipulation'>
+            <mat-tab-group animationDuration="0ms" (selectedTabChange)='switchTab($event)' [selectedIndex]="currentIndex">
+                <mat-tab label="Add user">
+                    <div class="input-header">Add user</div>
+                    <div class="input-row">
+                        <mat-form-field appearance='outline'>
+                            <mat-label>username</mat-label>
+                            <input matInput [formControl]='username' (keyup)='switchActiveButton()' (keyup)='switchIsValidUsername()'>
+                        </mat-form-field>
+                        <mat-form-field appearance='outline'>
+                            <mat-label>password</mat-label>
+                            <input matInput [formControl]='password' (keyup)='switchActiveButton()' #addPassword>
+                            <mat-hint [ngStyle]='{ color: addPassword.value.length < 4 ? "grey" : "black" }'>Min 4 characters: {{addPassword.value.length}} / 4</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div class="button-wrapper">
+                        <button mat-raised-button color='primary' (click)='addUser()' [disabled]='isActiveButton'>Add</button>
+                    </div>
+                    <div class="invalid-username" *ngIf='!isValidUsername'>
+                        <p>This username is already taken</p>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Edit user" [disabled]='tab !== "edit"'>
+                    <div class="input-header">Edit user</div>
+                    <div class="user-info">
+                        <p>{{oldUsername}}</p>
+                        <p>{{oldPassword}}</p>
+                    </div>
+                    <div class="input-row">
+                        <mat-form-field appearance='outline'>
+                            <mat-label>username</mat-label>
+                            <input matInput [formControl]='username' (keyup)='switchActiveButton()'>
+                        </mat-form-field>
+                        <mat-form-field appearance='outline'>
+                            <mat-label>password</mat-label>
+                            <input matInput [formControl]='password' (keyup)='switchActiveButton()' #editPassword>
+                            <mat-hint [ngStyle]='{ color: editPassword.value.length < 4 ? "grey" : "black" }'>Min 4 characters: {{editPassword.value.length}} / 4</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div class="button-wrapper">
+                        <button mat-raised-button color='primary' (click)='editUser()' [disabled]='isActiveButton'>Edit</button>
+                    </div>
+                </mat-tab>
+              </mat-tab-group>
+        </div>
     </div>
 </div>

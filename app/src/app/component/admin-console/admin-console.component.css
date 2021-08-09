@@ -12,14 +12,20 @@
 
 .user-list {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     padding-top: 1rem;
     padding-left: 3rem;
+}
+
+.user-list-container {
+    display: flex;
+    flex-direction: column;
 }
 
 .user-list-header {
     font-size: 1.5rem;
     margin-bottom: 1rem;
+    display: flex;
 }
 
 .user-item {
@@ -35,6 +41,12 @@
 .user-item * {
     margin-right: 1rem;
     margin-top: 1rem;
+}
+
+.user-manipulation {
+    justify-content: center;
+    display: flex;
+    padding: 3rem;
 }
 
 .bold {
@@ -73,4 +85,10 @@
 .invalid-username p {
     padding: .5rem 0;
     color: red;
+}
+
+@media (max-width: 1500px) {
+    .admin-console-container {
+        flex-direction: column;
+    }
 }

@@ -13,3 +13,9 @@
 .login-wrapper {
     flex: 1;
 }
+
+@media (max-width: 1500px) {
+    .home-container {
+        flex-direction: column;
+    }
+}
