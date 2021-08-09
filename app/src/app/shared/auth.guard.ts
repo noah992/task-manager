@@ -19,15 +19,6 @@ export class AuthGuard implements CanActivate {
         } else {
           return true
         }
-        // if (route.url.length > 1 && route.url[1].path == 'admin') {
-        //   return localStorage.getItem('loggedInAs') == 'admin' ? true : false
-        // } else if (route.url.length > 1 && route.url[1].path !== 'admin') {
-        //   return localStorage.getItem('loggedInAs') ? true : false
-        // } else if (route.url[0].path == 'user') {
-        //   return localStorage.getItem('loggedInAs') ? true : false
-        // } else {
-        //   return true
-        // }
       } else {
         return this.state.activeUser ? false : true
       }

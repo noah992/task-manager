@@ -30,6 +30,12 @@
     cursor: pointer;
 }
 
+.time {
+    padding-right: 1rem;
+    display: flex;
+    align-items: center;
+}
+
 .task-item:hover {
     border-radius: 10px;
     border-bottom: 1px solid teal;
@@ -37,6 +43,8 @@
 
 .task-item p {
     width: 30rem;
+    display: flex;
+    align-items: center;
 }
 
 .scroll-bar {

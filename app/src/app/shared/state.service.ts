@@ -2,58 +2,6 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
-const tempTask = [
-  {
-    userId: 1,
-    id: 1,
-    title: "delectus aut autem",
-    completed: false
-  },
-  {
-    userId: 1,
-    id: 2,
-    title: "quis ut nam facilis et officia qui",
-    completed: false
-  },
-  {
-    userId: 1,
-    id: 3,
-    title: "fugiat veniam minus",
-    completed: false
-  },
-  {
-    userId: 1,
-    id: 4,
-    title: "et porro tempora",
-    completed: true
-  },
-]
-
-type Ttask = {
-  userId:number,
-  id:number;
-  title:string;
-  completed:boolean
-}
-
-var taskId = 201;
-
-// type Tuser = {
-//   id:number,
-//   username:string
-//   password:string
-//   email:string
-// }
-
-// const tempUser:Tuser[] = [
-//   {id:1, username:'admin', password:'helloworld', email:'admin@animal.com'},
-//   {id:2, username:'whale', password:'mammal', email:'whale@animal.com'},
-//   {id:3, username:'frog', password:'amphobian', email:'frog@animal.com'},
-//   {id:4, username:'lizard', password:'reptile', email:'lizard@animal.com'},
-// ]
-
-var userId = 5
-
 @Injectable({
   providedIn: 'root'
 })
@@ -122,22 +70,12 @@ export class StateService {
   }
 
   deleteUser(id:number) {
-    // this.user = this.user.filter((item:any) => item.id !== id)
-    // this.updateUser.next(this.user)
     this.http.delete('http://localhost:3000/users/', { body: { id: id}}).subscribe(data => {
       this.getUser()
     })
   }
 
   editUser(id:number, username:string, password:string) {
-    // this.user = this.user.map((item:any) => {
-    //   if (item.id == id) {
-    //     return {id:id, username:username, password:password}
-    //   } else {
-    //     return item
-    //   }
-    // })
-    // this.updateUser.next(this.user)
     this.http.post('http://localhost:3000/users/edit', { id: id, username: username, password: password}).subscribe(data => {
       this.getUser()
     })

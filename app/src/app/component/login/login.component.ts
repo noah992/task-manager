@@ -29,13 +29,6 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    // if (this.state.isValidUser(this.username.value, this.password.value)) {
-    //   localStorage.setItem('loggedInAs', this.username.value)
-    //   this.router.navigate(['user', this.username.value])
-    //   this.state.login()
-    // } else {
-    //   this.isInvalidUser = true
-    // }
     this.http.post('http://localhost:3000/users/login', null, { headers: { 'Authorization': `Bearer ${this.username.value+":"+this.password.value}` } }).subscribe((data:any) => {
       if (data.validity) {
         localStorage.setItem('loggedInAs', data.token)

@@ -65,3 +65,12 @@
 .input-row * {
     width: 20rem;
 }
+
+.invalid-username {
+    display: flex;
+}
+
+.invalid-username p {
+    padding: .5rem 0;
+    color: red;
+}

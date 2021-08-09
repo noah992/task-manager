@@ -21,15 +21,19 @@
                 <div class="input-row">
                     <mat-form-field appearance='outline'>
                         <mat-label>username</mat-label>
-                        <input matInput [formControl]='username' (keyup)='switchActiveButton()'>
+                        <input matInput [formControl]='username' (keyup)='switchActiveButton()' (keyup)='switchIsValidUsername()'>
                     </mat-form-field>
                     <mat-form-field appearance='outline'>
                         <mat-label>password</mat-label>
-                        <input matInput [formControl]='password' (keyup)='switchActiveButton()'>
+                        <input matInput [formControl]='password' (keyup)='switchActiveButton()' #addPassword>
+                        <mat-hint [ngStyle]='{ color: addPassword.value.length < 4 ? "grey" : "black" }'>Min 4 characters: {{addPassword.value.length}} / 4</mat-hint>
                     </mat-form-field>
                 </div>
                 <div class="button-wrapper">
                     <button mat-raised-button color='primary' (click)='addUser()' [disabled]='isActiveButton'>Add</button>
+                </div>
+                <div class="invalid-username" *ngIf='!isValidUsername'>
+                    <p>This username is already taken</p>
                 </div>
             </mat-tab>
             <mat-tab label="Edit user" [disabled]='tab !== "edit"'>
@@ -45,7 +49,8 @@
                     </mat-form-field>
                     <mat-form-field appearance='outline'>
                         <mat-label>password</mat-label>
-                        <input matInput [formControl]='password' (keyup)='switchActiveButton()'>
+                        <input matInput [formControl]='password' (keyup)='switchActiveButton()' #editPassword>
+                        <mat-hint [ngStyle]='{ color: editPassword.value.length < 4 ? "grey" : "black" }'>Min 4 characters: {{editPassword.value.length}} / 4</mat-hint>
                     </mat-form-field>
                 </div>
                 <div class="button-wrapper">

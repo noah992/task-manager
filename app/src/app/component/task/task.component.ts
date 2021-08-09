@@ -12,38 +12,46 @@ export class TaskComponent implements OnInit {
   task:any = []
   newTask:any
   taskId = 201
-  taskNum:any
+  completedTask: any
+  incompletedTask: any
 
   getTask() {
     this.http.get('http://localhost:3000/task').subscribe((data:any) => {
       this.task = data
-      this.taskNum = data.length
+      console.log(this.task)
+      this.updateTask()
     })
   }
 
   addTask(e:any) {
     if (e.key == 'Enter') {
-      // const newTask = {
-      //   userId: localStorage.getItem('loggedInAs'),
-      //   id: this.taskId++,
-      //   title: this.newTask.value,
-      //   completed: false,
-      // }
-      // this.task = [newTask, ...this.task]
       this.http.post('http://localhost:3000/task', { title: this.newTask.value}).subscribe((data: any) => {
         this.task = data
-        this.taskNum = data.length
         this.newTask.setValue('')
+        this.updateTask()
       })
     }
   }
 
+  completeTask(id:any) {
+    console.log(this.task.find((item:any) => item.id == id))
+    this.http.post('http://localhost:3000/task/completed', { id: id }).subscribe((data: any) => {
+      this.task = data
+      this.updateTask()
+      console.log(this.task.find((item:any) => item.id == id))
+    })
+  }
+
   deleteTask(id:number) {
-    // this.task = this.task.filter((item:any) => item.id !== id)
     this.http.delete('http://localhost:3000/task', { body: { id: id } }).subscribe((data:any) => {
       this.task = data
-      this.taskNum = data.length
+      this.updateTask()
     })
+  }
+
+  updateTask() {
+    this.completedTask = this.task.filter((item:any) => item.completed == true)
+    this.incompletedTask = this.task.filter((item:any) => item.completed == false)
   }
 
   constructor(private http: HttpClient) {

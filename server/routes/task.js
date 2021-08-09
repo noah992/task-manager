@@ -5,7 +5,9 @@ const SECRET_KEY = 'angularfinalevaluation';
 const jwt = require('jsonwebtoken');
 
 var taskId = data.taskId
-var task = data.task
+var task = data.task.map(item => {
+    return { ...item, date: getTime() }
+})
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -16,7 +18,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
     const id = findId(req)
-    const newTask = { userId: id, id: taskId++, title: req.body.title, completed: false}
+    const newTask = { userId: id, id: taskId++, title: req.body.title, completed: false, date: getTime() }
     task = [newTask, ...task]
     const userTask = task.filter(item => +item.userId == +id)
     updateDatabase()
@@ -27,6 +29,20 @@ router.delete('/', function(req, res, next) {
     task = task.filter(item => item.id !== req.body.id)
     const id = findId(req)
     const userTask = task.filter(item => +item.userId == +id)
+    updateDatabase()
+    res.send(userTask)
+})
+
+router.post('/completed', function(req, res, next) {
+    task = task.map(item => {
+        if (item.id == req.body.id) {
+            return { ...item , completed: true, date: getTime() }
+        } else {
+            return item
+        }
+    })
+    const id = findId(req)
+    const userTask = task.filter(item => item.userId == id)
     updateDatabase()
     res.send(userTask)
 })
@@ -54,6 +70,11 @@ function getUser() {
 function updateDatabase() {
     data.task = task
     data.taskId = taskId
+}
+
+function getTime() {
+    const date = new Date()
+    return date.getHours()+':'+date.getMinutes()+'?'+date.getDate()+'/'+date.getMonth()
 }
 
 module.exports = router;
