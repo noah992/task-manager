@@ -4,18 +4,37 @@
 
 .home-container {
     display: flex;
+    flex-direction: column;
 }
 
-.user-list-wrapper {
+.home-row {
+    display: flex;
+}
+
+.home-row-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.home-row > * {
     flex: 1;
 }
 
-.login-wrapper {
-    flex: 1;
+.home-img {
+    padding: 2rem;
+    width: 20rem;
+    height: 15rem;
+    display: flex;
+    justify-content: center;
 }
 
-@media (max-width: 1500px) {
+/* .home-img > * {
+    width: 20rem;
+    height: auto;
+} */
+
+/* @media (max-width: 1500px) {
     .home-container {
         flex-direction: column;
     }
-}
+} */

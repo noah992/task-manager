@@ -32,10 +32,13 @@ export class LoginComponent implements OnInit {
     this.http.post('http://localhost:3000/users/login', null, { headers: { 'Authorization': `Bearer ${this.username.value+":"+this.password.value}` } }).subscribe((data:any) => {
       if (data.validity) {
         localStorage.setItem('loggedInAs', data.token)
+        localStorage.setItem('userId', data.id)
+        localStorage.setItem('plan', data.plan)
         localStorage.setItem('username', this.username.value)
         this.state.login(this.username.value)
         this.state.userNav()
-        this.router.navigate(['user', this.username.value])
+        this.state.checkPlan()
+        this.router.navigate(['home'])
       } else {
         this.isInvalidUser = true
       }

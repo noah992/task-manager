@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
   updateIsloggedIn:any
   activeUser:any
   updateActiveUser:any
+  plan:any
 
   login() {
     this.router.navigate(['login'])
@@ -43,6 +44,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.state.checkPlan()
   }
   
 }

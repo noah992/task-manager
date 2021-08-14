@@ -1,0 +1,87 @@
+<div class="payment">
+    <div class="payment-container">
+        <div class="payment-header">
+            <p>{{route.snapshot.params.plan[0].toUpperCase() + this.route.snapshot.params.plan.slice(1)+' '}}Plan</p>
+        </div>
+        <form [formGroup]='form' class="payment-form">
+            <div class="input-row">
+                <div class="input-container">
+                    <div style="display: flex;">
+                        <mat-form-field appearance='outline' class='payment-input'>
+                            <mat-label>First Name</mat-label>
+                            <input matInput formControlName='firstname'>
+                        </mat-form-field>
+                        <mat-form-field appearance='outline' class='payment-input'>
+                            <mat-label>Last Name</mat-label>
+                            <input matInput formControlName='lastname'>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="input-row">
+                <div class="input-container">
+                    <mat-form-field appearance='outline' class='payment-input'>
+                        <mat-label>Credit Card Number</mat-label>
+                        <input matInput formControlName='credit'>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="input-row">
+                <div class="input-container">
+                    <mat-form-field appearance='outline' class='payment-input'>
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName='email'>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="input-row">
+                <div class="input-container">
+                    <mat-form-field appearance='outline' class='payment-input'>
+                        <mat-label>Phone</mat-label>
+                        <input matInput formControlName='phone'>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="input-row">
+                <p (click)='generateForm()' style="cursor: pointer; color: blue; padding: 1rem 0;" *ngIf='!form.get("addressSecond")'>+ Address Line</p>
+                <div class="input-row" *ngIf='form.get("addressSecond")'>
+                    <div class="input-container">
+                        <mat-form-field appearance='outline' class='payment-input'>
+                            <mat-label>Address (optional)</mat-label>
+                            <input matInput formControlName='addressSecond'>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="input-row">
+                <div class="input-container">
+                    <mat-form-field appearance='outline' class='payment-input'>
+                        <mat-label>Address</mat-label>
+                        <input matInput formControlName='addressFirst'>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="input-row">
+                <div class="input-container">
+                    <div style="display: flex;">
+                        <mat-form-field appearance='outline' class='payment-input'>
+                            <mat-label>State</mat-label>
+                            <input matInput formControlName='state'>
+                        </mat-form-field>
+                        <mat-form-field appearance='outline' class='payment-input'>
+                            <mat-label>Country</mat-label>
+                            <input matInput formControlName='country'>
+                        </mat-form-field>
+                        <mat-form-field appearance='outline' class='payment-input'>
+                            <mat-label>zip</mat-label>
+                            <input matInput formControlName='zip'>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="input-row">
+                <button mat-raised-button (click)='openDialog("fe")' style="margin: 1rem 0;">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -13,8 +13,8 @@
 .lorem-left {
     flex: 1;
     padding: 3rem;
-    border: 1px solid teal;
-    border-radius: 16px;
+    /* border: 1px solid teal;
+    border-radius: 16px; */
 }
 
 .lorem-right {

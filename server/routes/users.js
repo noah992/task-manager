@@ -13,8 +13,12 @@ router.get('/', function(req, res, next) {
   res.send(tempUser)
 });
 
+router.get('/:username', function(req, res, next) {
+  res.send(tempUser.find(item => item.username == req.params.username))
+})
+
 router.get('/login', function(req, res, next) {
-  res.send(202)
+  res.send(200)
 });
 
 router.post('/login', function(req, res, next) {
@@ -23,7 +27,7 @@ router.post('/login', function(req, res, next) {
   for (let item of tokenizedUsers) {
     const {username, password} = jwt.verify(item.token, SECRET_KEY)
     if (username == usernameReq && password == passwordReq) {
-      return res.send({ validity: true, token: token })
+      return res.send({ validity: true, token: token, id:item.id, plan: tempUser.find(i => i.id == item.id).plan })
     } 
   }
   res.send({ validity: false, token: null})
@@ -31,7 +35,15 @@ router.post('/login', function(req, res, next) {
 
 router.post('/signup', function(req, res, next) {
   const [usernameReq, passwordReq] = req.headers.authorization.split(' ')[1].split(':')
-  tempUser.push({ id: userId, username: usernameReq, password: passwordReq })
+  const userInfo = {
+    id: userId,
+    username: usernameReq,
+    password: passwordReq,
+    email: usernameReq + '@taskmanager.com',
+    fname: 'yuri',
+    lname: usernameReq,
+  }
+  tempUser.push(userInfo)
   const token = jwt.sign({ username: usernameReq, password: passwordReq}, SECRET_KEY)
   tokenizedUsers = [...tokenizedUsers, { id: userId++, token: token }]
   updateDatabase()
@@ -41,7 +53,7 @@ router.post('/signup', function(req, res, next) {
 router.post('/edit', function(req, res, next) {
   tempUser = tempUser.map(item => {
     if (+item.id == +req.body.id) {
-      return { id: item.id, username: req.body.username, password: req.body.password }
+      return { ...item, id: item.id, username: req.body.username, password: req.body.password, plan:req.body.plan }
     } else {
       return item
     }
@@ -58,6 +70,19 @@ router.post('/edit', function(req, res, next) {
   res.send({ id: req.body.id})
 })
 
+router.post('/edit/:plan', function(req, res, next) {
+  tempUser = tempUser.map(item => {
+    if (+item.id == +req.body.id) {
+      return { ...item,  plan:req.params.plan }
+    } else {
+      return item
+    }
+  })
+  updateDatabase()
+  console.log(tempUser)
+  res.send({ id:req.body.id, plan: req.params.plan })
+})
+
 router.delete('', function(req, res, next) {
   tempUser = tempUser.filter(item => item.id !== req.body.id)
   tokenizedUsers = tokenizedUsers.filter(item => item.id !== req.body.id)
@@ -70,7 +95,6 @@ function updateDatabase() {
   data.tempUser = tempUser
   data.tokenizedUsers = tokenizedUsers
   data.userId = userId - 1
-  console.log(userId)
 }
 
 module.exports = router;

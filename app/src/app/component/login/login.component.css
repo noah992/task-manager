@@ -4,7 +4,6 @@
 
 .login-container {
     display: flex;
-    flex-direction: column;
     padding: 2rem;
 }
 
@@ -18,11 +17,22 @@
 }
 
 .login-row * {
-    width: 25rem;
+    width: 20rem;
     margin-right: 1rem;
 }
 
 .invalid-user {
     padding: .5rem 0;
     color: red;
+}
+
+.login-section {
+    flex: 1;
+    padding: 1rem 2rem;
+}
+
+@media (max-width: 1500px) {
+    .login-container {
+        flex-direction: column;
+    }
 }

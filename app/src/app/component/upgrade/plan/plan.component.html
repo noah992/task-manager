@@ -1,0 +1,35 @@
+<div class="plan">
+    <div class="plan-container">
+        <p>Choose Plan to Upgrade</p>
+        <div class="card-wrapper">
+            <div class="card">
+                <div class="card-container" appUpgrade [routerLink]="['family']" [queryParams]="{plan: 'family'}">
+                    <p>Family Plan</p>
+                    <div class="description">
+                        <p>xxx xxxx xxxxx xxx</p>
+                        <p>xxx xxxx xxxxx xxx</p>
+                        <p>xxx xxxx xxxxx xxx</p>
+                        <p>xxx xxxx xxxxx xxx</p>
+                        <p>xxx xxxx xxxxx xxx</p>
+                        <p>xxx xxxx xxxxx xxx</p>
+                    </div>
+                    <div class="price">$19.99</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-container" appUpgrade [routerLink]="['business']" [queryParams]="{plan: 'business'}">
+                    <p>Business Plan</p>
+                    <div class="description">
+                        <p>xxx xxxx xxxxx xxx</p>
+                        <p>xxx xxxx xxxxx xxx</p>
+                        <p>xxx xxxx xxxxx xxx</p>
+                        <p>xxx xxxx xxxxx xxx</p>
+                        <p>xxx xxxx xxxxx xxx</p>
+                        <p>xxx xxxx xxxxx xxx</p>
+                    </div>
+                    <div class="price">$39.99</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

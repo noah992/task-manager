@@ -11,7 +11,7 @@
       <div class="option">
         <div class="option-container">
           <div class="option-item">
-            <p *ngIf='isLoggedIn'>{{activeUser | capitalize}}</p>
+            <p *ngIf='isLoggedIn'>{{activeUser | capitalize}} <span *ngIf='plan'>{{plan}}</span></p>
             <button mat-raised-button (click)='login()' *ngIf='!isLoggedIn'>Log In</button>
             <button mat-raised-button *ngIf='isLoggedIn' (click)='logout()'>Log Out</button>
           </div>
@@ -19,4 +19,6 @@
       </div>
   </div>
 </div>
-<router-outlet></router-outlet>
+<div class="content">
+  <router-outlet></router-outlet>
+</div>

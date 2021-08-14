@@ -34,7 +34,6 @@ router.delete('/', function(req, res, next) {
 })
 
 router.post('/edit', function(req, res, next) {
-    console.log(req.body)
     task =  task.map(item => {
         if (item.id == req.body.id) {
             return { ...item, ...req.body }
@@ -45,8 +44,7 @@ router.post('/edit', function(req, res, next) {
     const id = findId(req)
     const userTask = task.filter(item => item.userId == id)
     updateDatabase()
-    console.log(userTask)
-    res.send(userTask)
+    res.status(200).send(userTask)
 })
 
 router.post('/completed', function(req, res, next) {

@@ -1,6 +1,13 @@
 .header {
     background-color: teal;
     padding: 1rem;
+    position: fixed;
+    width: 100%;
+    top: 0;
+}
+
+.content {
+    padding-top: 5rem;
 }
 
 .header-container {

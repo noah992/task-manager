@@ -1,0 +1,40 @@
+.payment {
+    padding: 1rem;
+}
+
+.payment-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.payment-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.payment-header > p {
+    font-size: 2rem;
+    padding: 2rem 0;
+}
+
+.payment-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: .8rem;
+}
+
+.input-container {
+    width: 40rem;
+}
+
+.input-row {
+    display: flex;
+    justify-content: center;
+}
+
+.payment-input {
+    width: 100%;
+}

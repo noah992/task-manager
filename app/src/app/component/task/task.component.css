@@ -20,7 +20,8 @@
 }
 
 .task-workspace > * {
-    padding: 0 3rem;
+    padding: 0 2rem;
+    flex: 1;
 }
 
 .task-edit {
@@ -56,13 +57,13 @@
 }
 
 .task-item p {
-    width: 30rem;
+    width: 28rem;
     display: flex;
     align-items: center;
 }
 
 .scroll-bar {
-    height: 35rem;
+    height: 26rem;
 }
 
 .task-edit-group {
@@ -114,3 +115,15 @@
     padding: 1rem 0;
 }
 
+.task-item button {
+    width: 4.5rem;
+}
+
+@media (max-width: 1500px) {
+    .task-workspace {
+        flex-direction: column;
+    }
+    .task-edit {
+        margin-top: 2rem;
+    }
+}

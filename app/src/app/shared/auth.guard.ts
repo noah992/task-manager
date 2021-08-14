@@ -10,7 +10,6 @@ export class AuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      
       if (route.url) {
         if (route.url.find(item => item.path == 'admin')) {
           return this.state.activeUser == 'admin' ? true : false

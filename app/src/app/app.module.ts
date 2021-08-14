@@ -11,11 +11,12 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ApiInterceptor } from './shared/api.interceptor';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CapitalizePipe
+    CapitalizePipe,
   ],
   imports: [
     BrowserModule,
@@ -25,10 +26,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     HttpClientModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatSnackBarModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true},
     MatDatepickerModule,
+    MatSnackBarModule,
   ],
   bootstrap: [AppComponent]
 })

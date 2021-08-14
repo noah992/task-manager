@@ -14,8 +14,7 @@ import { UserComponent } from './user/user.component';
 import { LoremComponent } from './lorem/lorem.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { HttpClientModule } from '@angular/common/http';
-
-
+import { UpgradeComponent } from './upgrade/upgrade.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +24,8 @@ import { HttpClientModule } from '@angular/common/http';
     LoginComponent,
     AdminConsoleComponent,
     UserComponent,
-    LoremComponent
+    LoremComponent,
+    UpgradeComponent,
   ],
   imports: [
     CommonModule,
@@ -44,6 +44,6 @@ import { HttpClientModule } from '@angular/common/http';
     MatFormFieldModule,
     MatInputModule,
     MatTabsModule,
-  ]
+  ],
 })
 export class ComponentModule { }

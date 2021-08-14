@@ -1,0 +1,14 @@
+<div class="dialog">
+    <div class="dialog-container">
+        <div class="dialog-item" *ngFor='let item of data'>
+            <p>{{item.label[0].toUpperCase() + item.label.slice(1)}}: </p>
+            <p>{{item.value}}</p>
+        </div>
+        <div class="button-wrapper">
+            <div>
+                <button mat-raised-button (click)='closeDialog()' color=primary>Cancel</button>
+                <button mat-raised-button (click)='closeDialog()' color=accent>Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>

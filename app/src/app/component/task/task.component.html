@@ -18,10 +18,10 @@
                             <div class="task-item" *ngFor='let item of incompletedTask' (click)='generateEditTask(item)'>
                                 <p>{{item.title}}</p>
                                 <div class="time">
-                                    {{item.date.split("?")[0]}}
+                                    {{item.date.split(" ")[0]}}
                                 </div>
                                 <div class="time">
-                                    {{item.date.split("?")[1]}}
+                                    {{item.date.split(" ")[1]}}
                                 </div>
                                 <button mat-raised-button (click)='completeTask(item.id)'>Complete</button>
                             </div>
@@ -37,10 +37,10 @@
                             <div class="task-item" *ngFor='let item of completedTask'>
                                 <p>{{item.title}}</p>
                                 <div class="time">
-                                    {{item.date.split("?")[0]}}
+                                    {{item.date.split(" ")[0]}}
                                 </div>
                                 <div class="time">
-                                    {{item.date.split("?")[1]}}
+                                    {{item.date.split(" ")[1]}}
                                 </div>
                                 <button mat-raised-button (click)='deleteTask(item.id)'>Delete</button>
                             </div>
@@ -63,9 +63,9 @@
                             </div>
                             <div class="input-row">
                                 <p>Due Date:</p>
-                                <div>
+                                <div style='display: flex;'>
                                     <input matInput [matDatepicker]="picker" formControlName='editDueDate'>
-                                    <mat-datepicker-toggle [for]="picker" [ngStyle]='{color:"rgb(200, 240, 200)"}'></mat-datepicker-toggle>
+                                    <mat-datepicker-toggle [for]="picker" [ngStyle]='{color:"rgb(200, 240, 200)"}' style="display: flex; align-items: flex-end;"></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
                                 </div>
                             </div>

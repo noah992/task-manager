@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-task',
@@ -58,6 +59,9 @@ export class TaskComponent implements OnInit {
     }
     this.http.post('http://localhost:3000/task/edit', body).subscribe((data: any) => {
       this.task = data
+      if (data) {
+        this._snackBar.open('Your task has been successfully updated', 'Close', { duration: 2000 })
+      }
       this.updateTask()
     })
   }
@@ -71,10 +75,18 @@ export class TaskComponent implements OnInit {
 
   updateTask() {
     this.completedTask = this.task.filter((item:any) => item.completed == true)
+    this.completedTask = this.completedTask.map((item:any) => {
+      const date = this.convertMonthDate(item.date)
+      return { ...item, date: date }
+    })
     this.incompletedTask = this.task.filter((item:any) => item.completed == false)
+    this.incompletedTask = this.incompletedTask.map((item:any) => {
+      const date = this.convertMonthDate(item.date)
+      return { ...item, date: date }
+    })
   }
 
-  constructor(private http: HttpClient, private fb: FormBuilder) {
+  constructor(private http: HttpClient, private fb: FormBuilder, private _snackBar: MatSnackBar) {
     this.getTask()
     this.newTask = new FormControl()
     this.taskEdit = this.fb.group({
@@ -91,7 +103,7 @@ export class TaskComponent implements OnInit {
     const { id, title, contact, date, description, dueDate, location } = task
     this.taskEdit.controls.editTitle.setValue(title ? title : '')
     this.taskEdit.controls.editContact.setValue(contact ? contact : '')
-    this.taskEdit.controls.editCreatedDate.setValue(this.convertMonthDate(date) ? this.convertMonthDate(date) : '')
+    this.taskEdit.controls.editCreatedDate.setValue(date ? date : '')
     this.taskEdit.controls.editDescription.setValue(description ? description : '')
     this.taskEdit.controls.editDueDate.setValue(dueDate ? dueDate : '')
     this.taskEdit.controls.editLocation.setValue(location ? location : '')
@@ -100,7 +112,7 @@ export class TaskComponent implements OnInit {
   }
 
   convertMonthDate(time:any) {
-    return time.split("?")[0] + ' ' + time.split("?")[1].split('/')[1] + '/' + time.split("?")[1].split('/')[0]+ '/' + time.split("?")[1].split('/')[2]
+    return ('0' + time.split("?")[0].split(':')[0]).slice(-2) + ':' + ('0' + time.split("?")[0].split(':')[1]).slice(-2) + ' ' + time.split("?")[1].split('/')[1] + '/' + time.split("?")[1].split('/')[0]+ '/' + time.split("?")[1].split('/')[2]
   }
   
   // updateTaskEdit() {

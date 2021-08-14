@@ -15,6 +15,23 @@ export class StateService {
   updateIsLoggedIn:any
   activeUser:any
   updateActiveUser:any
+  userInfo: any
+
+  checkPlan() {
+    let plan;
+    console.log(localStorage)
+    switch (localStorage.getItem('plan')) {
+      case 'family':
+        plan = '🥈'
+        break
+      case 'business':
+        plan = '🥇'
+        break
+      default:
+        plan = ''
+    }
+    this.updateActiveUser.next(this.activeUser+plan)
+  }
 
   getUser() {
     this.http.get('http://localhost:3000/users').subscribe(data => {
@@ -36,6 +53,13 @@ export class StateService {
     this.updateIsLoggedIn.next(this.isLoggedIn)
     this.activeUser = username
     this.updateActiveUser.next(this.activeUser)
+    this.assignUser(username)
+  }
+
+  assignUser(username:string) {
+    this.http.get('http://localhost:3000/users/'+username).subscribe((data:any) => {
+      this.userInfo = new UserInfo(data)
+    })
   }
 
   logout() {
@@ -43,11 +67,16 @@ export class StateService {
     this.updateIsLoggedIn.next(this.isLoggedIn)
     this.activeUser = null
     this.updateActiveUser.next(this.activeUser)
+    localStorage.removeItem('loggedInAs')
+    localStorage.removeItem('userId')
+    localStorage.removeItem('plan')
+    localStorage.removeItem('token')
+    localStorage.removeItem('username')
   }
 
   initNav() {
     this.nav = [
-      { page: 'Home', link: this.isLoggedIn ? 'user/' + this.activeUser : 'home' },
+      { page: 'Home', link: 'home' },
       { page: 'Task', link: 'user/' + this.activeUser + '/task' },
       { page: 'Admin Console', link: 'user/admin/admin-console' }
     ]
@@ -56,9 +85,10 @@ export class StateService {
 
   userNav() {
     this.nav = [
-      { page: 'Home', link: this.isLoggedIn ? 'user/' + this.activeUser : 'home' },
+      { page: 'Home', link: 'home' },
       { page: 'Task', link: 'user/' + this.activeUser + '/task' },
-      { page: 'Admin Console', link: 'user/admin/admin-console' }
+      { page: 'Admin Console', link: 'user/admin/admin-console' }, 
+      { page: 'Upgrade', link: ['user/' + this.activeUser + '/upgrade'] },
     ]
     this.updateNav.next(this.nav)
   }
@@ -94,4 +124,24 @@ export class StateService {
     ]
     this.updateNav = new Subject()
   }
+}
+
+class UserInfo {
+  username:string
+  email:string
+  fname:string
+  lname:string
+  constructor(userInfo:IUserInfo) {
+    this.username = userInfo.username
+    this.email = userInfo.email
+    this.fname = userInfo.fname
+    this.lname = userInfo.lname
+  }
+}
+
+interface IUserInfo {
+  username:string,
+  email:string,
+  fname:string,
+  lname:string
 }
