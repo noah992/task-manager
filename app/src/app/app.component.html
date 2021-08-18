@@ -11,9 +11,9 @@
       <div class="option">
         <div class="option-container">
           <div class="option-item">
-            <p *ngIf='isLoggedIn'>{{activeUser | capitalize}} <span *ngIf='plan'>{{plan}}</span></p>
-            <button mat-raised-button (click)='login()' *ngIf='!isLoggedIn'>Log In</button>
-            <button mat-raised-button *ngIf='isLoggedIn' (click)='logout()'>Log Out</button>
+            <p *ngIf='userProps'>{{userProps.username | capitalize}} <span *ngIf='badge'>{{badge}}</span></p>
+            <button mat-raised-button (click)='login()' *ngIf='!userProps'>Log In</button>
+            <button mat-raised-button *ngIf='userProps' (click)='logout()'>Log Out</button>
           </div>
         </div>
       </div>

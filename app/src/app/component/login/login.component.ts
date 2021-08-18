@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { StateService } from 'src/app/shared/state.service';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -11,53 +13,46 @@ import { StateService } from 'src/app/shared/state.service';
 })
 export class LoginComponent implements OnInit {
 
-  username:any
-  password:any
-  isActiveButton:any
-  isInvalidUser:any
-  isLoggedIn:any
-  updateIsLoggedIn:any
-  activeUser:any
-  updateActiveUser:any
+  formUsername:any
+  formPassword:any
+  domBool = {
+    isActiveButton:false,
+    isValidUser:true
+  }
 
   switchButton() {
-    if (this.username.value && this.password.value) {
-      this.isActiveButton = false
+    if (this.formUsername.value && this.formPassword.value) {
+      this.domBool.isActiveButton = false
     } else {
-      this.isActiveButton = true
+      this.domBool.isActiveButton = true
     }
   }
 
   login() {
-    this.http.post('http://localhost:3000/users/login', null, { headers: { 'Authorization': `Bearer ${this.username.value+":"+this.password.value}` } }).subscribe((data:any) => {
-      if (data.validity) {
-        localStorage.setItem('loggedInAs', data.token)
-        localStorage.setItem('userId', data.id)
-        localStorage.setItem('plan', data.plan)
-        localStorage.setItem('username', this.username.value)
-        this.state.login(this.username.value)
-        this.state.userNav()
-        this.state.checkPlan()
-        this.router.navigate(['home'])
-      } else {
-        this.isInvalidUser = true
-      }
+    this.http.post(this.state.apiUrl+'login', {username:this.formUsername.value, password:this.formPassword.value})
+    .pipe(catchError((e) => {
+      this.domBool.isValidUser = false
+      return throwError(e)
+    }))
+    .subscribe((data:any) => {
+      localStorage.setItem('BearerToken', data.bearerToken)
+      this.state.updateUserProps.next(data)
+      // if (data.validity) {
+      //   
+      //   this.state.login(this.username.value)
+      //   this.state.userNav()
+      //   this.state.checkPlan()
+      //   this.router.navigate(['home'])
+      // } else {
+      //   this.isInvalidUser = true
+      // }
+      this.router.navigate(['home'])
     })
   }
 
   constructor(private state: StateService, private router: Router, private http: HttpClient) {
-    this.username = new FormControl()
-    this.password = new FormControl()
-    this.isActiveButton = true
-    this.isInvalidUser = false
-    this.isLoggedIn = this.state.isLoggedIn
-    this.updateIsLoggedIn = this.state.updateIsLoggedIn.subscribe((data:any) => {
-      this.isLoggedIn = data
-    })
-    this.activeUser = this.state.activeUser
-    this.updateActiveUser = this.state.updateActiveUser.subscribe((data:any) => {
-      this.activeUser = data
-    })
+    this.formUsername = new FormControl()
+    this.formPassword = new FormControl()
   }
 
   ngOnInit(): void {

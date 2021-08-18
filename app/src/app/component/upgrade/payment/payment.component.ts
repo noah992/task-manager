@@ -38,6 +38,7 @@ export class PaymentComponent implements OnInit {
     })
 
     this.route.data.subscribe(data => {
+      console.log(data)
       this.form.get('firstname').value = data.data.fname[0].toUpperCase() + data.data.fname.slice(1)
       this.form.get('lastname').value = data.data.lname[0].toUpperCase() + data.data.lname.slice(1)
       this.form.get('email').value = data.data.email[0].toUpperCase() + data.data.email.slice(1)
@@ -57,11 +58,9 @@ export class PaymentComponent implements OnInit {
     })
     dialogRef.afterClosed().subscribe(data => {
       if (data) {
-        this.http.post('http://localhost:3000/users/edit/'+this.route.snapshot.params.plan, { id: localStorage.getItem('userId'), }).subscribe((data:any) => {
-          this.router.navigate(['user', this.state.activeUser, 'task'])
-          this.state.userNav()
-          localStorage.setItem('plan', data.plan)
-          this.state.checkPlan()
+        this.http.get('http://localhost:3000/users/edit/'+this.route.snapshot.params.plan).subscribe((data:any) => {
+          this.router.navigate(['user', this.state.userProps.username, 'task'])
+          this.state.updateUserProps.next(data)
         })
       }
     })

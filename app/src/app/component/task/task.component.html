@@ -7,21 +7,21 @@
             <mat-tab-group animationDuration='1000ms'>
                 <mat-tab label='Task'>
                     <div class="task-list">
-                        <div *ngIf='incompletedTask' class='task-num'>
-                            {{incompletedTask.length}} Tasks
+                        <div *ngIf='task.incompleted' class='task-num'>
+                            {{task.incompleted.length}} Tasks
                         </div>
                         <mat-form-field appearance="outline">
                             <mat-label>Add new task</mat-label>
                             <input matInput [formControl]='newTask' (keyup)='addTask($event)'>
                         </mat-form-field>
                         <div class="scroll-bar">
-                            <div class="task-item" *ngFor='let item of incompletedTask' (click)='generateEditTask(item)'>
+                            <div class="task-item" *ngFor='let item of task.incompleted' (click)='generateEditTask(item)'>
                                 <p>{{item.title}}</p>
                                 <div class="time">
-                                    {{item.date.split(" ")[0]}}
+                                    {{item.createdDate.split(" ")[0]}}
                                 </div>
                                 <div class="time">
-                                    {{item.date.split(" ")[1]}}
+                                    {{item.createdDate.split(" ")[1]}}
                                 </div>
                                 <button mat-raised-button (click)='completeTask(item.id)'>Complete</button>
                             </div>
@@ -30,17 +30,17 @@
                 </mat-tab>
                 <mat-tab label='Completed'>
                     <div class="task-list">
-                        <div *ngIf='completedTask' class='task-num'>
-                            {{completedTask.length}} Tasks
+                        <div *ngIf='task.completed' class='task-num'>
+                            {{task.completed.length}} Tasks
                         </div>
                         <div class="scroll-bar">
-                            <div class="task-item" *ngFor='let item of completedTask'>
+                            <div class="task-item" *ngFor='let item of task.completed'>
                                 <p>{{item.title}}</p>
                                 <div class="time">
-                                    {{item.date.split(" ")[0]}}
+                                    {{item.createdDate.split(" ")[0]}}
                                 </div>
                                 <div class="time">
-                                    {{item.date.split(" ")[1]}}
+                                    {{item.createdDate.split(" ")[1]}}
                                 </div>
                                 <button mat-raised-button (click)='deleteTask(item.id)'>Delete</button>
                             </div>
@@ -52,34 +52,34 @@
                 <div class="task-edit-container">
                     <div class="task-edit-group">
                         <p>Detail</p>
-                        <div [formGroup]='taskEdit'>
+                        <div [formGroup]='formTask'>
                             <div class="input-row">
                                 <p>Title:</p>
-                                <input formControlName='editTitle'>
+                                <input formControlName='title'>
                             </div>
                             <div class="input-row">
                                 <p>Created Date:</p>
-                                <input formControlName='editCreatedDate'>
+                                <input formControlName='createdDate'>
                             </div>
                             <div class="input-row">
                                 <p>Due Date:</p>
                                 <div style='display: flex;'>
-                                    <input matInput [matDatepicker]="picker" formControlName='editDueDate'>
+                                    <input matInput [matDatepicker]="picker" formControlName='dueDate'>
                                     <mat-datepicker-toggle [for]="picker" [ngStyle]='{color:"rgb(200, 240, 200)"}' style="display: flex; align-items: flex-end;"></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
                                 </div>
                             </div>
                             <div class="input-row">
                                 <p>Contact:</p>
-                                <input formControlName='editContact'>
+                                <input formControlName='contact'>
                             </div>
                             <div class="input-row">
                                 <p>Location:</p>
-                                <input formControlName='editLocation'>
+                                <input formControlName='location'>
                             </div>
                             <div class="input-row">
                                 <p>Desctiption:</p>
-                                <textarea matInput formControlName='editDescription'></textarea>
+                                <textarea matInput formControlName='description'></textarea>
                             </div>
                         </div>
                         <div class="button-wrapper">

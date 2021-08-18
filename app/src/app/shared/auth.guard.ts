@@ -7,24 +7,31 @@ import { StateService } from './state.service';
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
+
+  userProps:any
+
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+      
       if (route.url) {
         if (route.url.find(item => item.path == 'admin')) {
-          return this.state.activeUser == 'admin' ? true : false
+          return this.userProps.username == 'admin' ? true : false
         } else if (route.url.find(item => item.path == 'user')) {
-          return this.state.activeUser ? true : false
+          return this.userProps.username ? true : false
         } else {
           return true
         }
       } else {
-        return this.state.activeUser ? false : true
+        return this.userProps.username ? false : true
       }
   }
 
   constructor(private state: StateService) {
-
+    this.userProps = {username:false}
+    state.updateUserProps.subscribe(data => {
+      this.userProps = data
+    })
   }
   
 }

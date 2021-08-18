@@ -13,21 +13,26 @@ export class ApiInterceptor implements HttpInterceptor {
   constructor() {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    let newRequest:any
-    if (request.headers.keys().find(item => item == 'Authorization')) {
-      newRequest = request.clone({
-        setHeaders: {
-          'Content-Type': 'application/json',
-        }
-      })
-    } else {
-      newRequest = request.clone({
-        setHeaders: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('loggedInAs')}`
-        }
-      })
-    }
+    const newRequest = request.clone({
+      setHeaders: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('BearerToken')}`
+      }
+    })
+    // if (request.headers.keys().find(item => item == 'Authorization')) {
+    //   newRequest = request.clone({
+    //     setHeaders: {
+    //       'Content-Type': 'application/json',
+    //     }
+    //   })
+    // } else {
+    //   newRequest = request.clone({
+    //     setHeaders: {
+    //       'Content-Type': 'application/json',
+    //       'Authorization': `Bearer ${localStorage.getItem('BearerToken')}`
+    //     }
+    //   })
+    // }
     return next.handle(newRequest);
   }
 }

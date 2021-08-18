@@ -8,30 +8,29 @@ import { HttpClient } from '@angular/common/http';
 export class StateService {
 
   nav:any
-  updateNav:any
+  updateNav = new Subject()
   user:any
-  updateUser:any
-  isLoggedIn:any
-  updateIsLoggedIn:any
-  activeUser:any
-  updateActiveUser:any
+  updateUser = new Subject()
+  userProps:any
   userInfo: any
+  updateUserProps = new Subject()
+  apiUrl = 'http://localhost:3000/users/'
 
-  checkPlan() {
-    let plan;
-    console.log(localStorage)
-    switch (localStorage.getItem('plan')) {
-      case 'family':
-        plan = '🥈'
-        break
-      case 'business':
-        plan = '🥇'
-        break
-      default:
-        plan = ''
-    }
-    this.updateActiveUser.next(this.activeUser+plan)
-  }
+  // set display name with badge
+  // checkPlan() {
+  //   let plan;
+  //   switch (localStorage.getItem('plan')) {
+  //     case 'family':
+  //       plan = '🥈'
+  //       break
+  //     case 'business':
+  //       plan = '🥇'
+  //       break
+  //     default:
+  //       plan = ''
+  //   }
+  //   this.updateActiveUser.next(this.activeUser+plan)
+  // }
 
   getUser() {
     this.http.get('http://localhost:3000/users').subscribe(data => {
@@ -47,37 +46,11 @@ export class StateService {
       return false
     }
   }
-  
-  login(username:string) {
-    this.isLoggedIn = true
-    this.updateIsLoggedIn.next(this.isLoggedIn)
-    this.activeUser = username
-    this.updateActiveUser.next(this.activeUser)
-    this.assignUser(username)
-  }
-
-  assignUser(username:string) {
-    this.http.get('http://localhost:3000/users/'+username).subscribe((data:any) => {
-      this.userInfo = new UserInfo(data)
-    })
-  }
-
-  logout() {
-    this.isLoggedIn = false
-    this.updateIsLoggedIn.next(this.isLoggedIn)
-    this.activeUser = null
-    this.updateActiveUser.next(this.activeUser)
-    localStorage.removeItem('loggedInAs')
-    localStorage.removeItem('userId')
-    localStorage.removeItem('plan')
-    localStorage.removeItem('token')
-    localStorage.removeItem('username')
-  }
 
   initNav() {
     this.nav = [
       { page: 'Home', link: 'home' },
-      { page: 'Task', link: 'user/' + this.activeUser + '/task' },
+      { page: 'Task', link: 'user/' + this.userProps + '/task' },
       { page: 'Admin Console', link: 'user/admin/admin-console' }
     ]
     this.updateNav.next(this.nav)
@@ -86,18 +59,18 @@ export class StateService {
   userNav() {
     this.nav = [
       { page: 'Home', link: 'home' },
-      { page: 'Task', link: 'user/' + this.activeUser + '/task' },
+      { page: 'Task', link: 'user/' + this.userProps.username + '/task' },
       { page: 'Admin Console', link: 'user/admin/admin-console' }, 
-      { page: 'Upgrade', link: ['user/' + this.activeUser + '/upgrade'] },
+      { page: 'Upgrade', link: ['user/' + this.userProps.username + '/upgrade'] },
     ]
     this.updateNav.next(this.nav)
   }
 
-  addUser(username:string, password:string) {
-    this.http.post('http://localhost:3000/users/signup', null, { headers: { 'Authorization': `Bearer ${username+":"+password}`}}).subscribe((data:any) => {
-      this.getUser()
-    })
-  }
+  // addUser(username:string, password:string) {
+  //   this.http.post('http://localhost:3000/users/signup', null, { headers: { 'Authorization': `Bearer ${username+":"+password}`}}).subscribe((data:any) => {
+  //     this.getUser()
+  //   })
+  // }
 
   deleteUser(id:number) {
     this.http.delete('http://localhost:3000/users/', { body: { id: id}}).subscribe(data => {
@@ -105,43 +78,17 @@ export class StateService {
     })
   }
 
-  editUser(id:number, username:string, password:string) {
-    this.http.post('http://localhost:3000/users/edit', { id: id, username: username, password: password}).subscribe(data => {
+  editUser(id:number, username:string, email:string) {
+    this.http.post('http://localhost:3000/users/edit', { id: id, username: username, email:email}).subscribe(data => {
       this.getUser()
     })
   }
   
   constructor(private http: HttpClient) {
-    this.updateUser = new Subject()
-    this.isLoggedIn = localStorage.getItem('loggedInAs') ? true : false
-    this.updateIsLoggedIn = new Subject()
-    this.activeUser = localStorage.getItem('username')
-    this.updateActiveUser = new Subject()
-    this.nav = [
-      { page: 'Home', link: this.isLoggedIn ? 'user/' + this.activeUser : 'home' },
-      { page: 'Task', link: 'user/' + this.activeUser + '/task' },
-      { page: 'Admin Console', link: 'user/admin/admin-console' }
-    ]
-    this.updateNav = new Subject()
+    this.userProps = null
+    this.updateUserProps.subscribe(data => {
+      this.userProps = data
+    })
+    
   }
-}
-
-class UserInfo {
-  username:string
-  email:string
-  fname:string
-  lname:string
-  constructor(userInfo:IUserInfo) {
-    this.username = userInfo.username
-    this.email = userInfo.email
-    this.fname = userInfo.fname
-    this.lname = userInfo.lname
-  }
-}
-
-interface IUserInfo {
-  username:string,
-  email:string,
-  fname:string,
-  lname:string
 }

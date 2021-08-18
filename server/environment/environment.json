@@ -1,0 +1,4 @@
+{
+    "jwtPrivateKey": "angularSecurity_jwt",
+    "db": "mongodb://127.0.0.1:27017/Angular"
+}

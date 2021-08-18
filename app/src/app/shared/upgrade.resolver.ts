@@ -12,7 +12,7 @@ import { StateService } from './state.service';
 })
 export class UpgradeResolver implements Resolve<boolean> {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    return of(this.state.userInfo);
+    return of(this.state.userProps);
   }
 
   constructor(private state: StateService) {

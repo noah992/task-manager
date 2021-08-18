@@ -1,6 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { StateService } from './shared/state.service';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -11,40 +14,71 @@ export class AppComponent implements OnInit {
 
   nav:any
   updateNav:any
-  isLoggedIn:any
-  updateIsloggedIn:any
+  userProps:any
   activeUser:any
   updateActiveUser:any
-  plan:any
+  badge = ''
 
   login() {
     this.router.navigate(['login'])
   }
 
   logout() {
-    localStorage.removeItem('loggedInAs')
-    this.state.logout()
-    this.state.initNav()
+    localStorage.removeItem('BearerToken')
+    this.state.updateUserProps.next(false)
     this.router.navigate(['home'])
+    this.nav = [
+      { page: 'Home', link: 'home' },
+      { page: 'Task', link: ['user', this.userProps ? this.userProps.username : 'default', 'task'] },
+      { page: 'Admin Console', link: 'user/admin/admin-console' }
+    ]
   }
 
-  constructor(private router: Router, private state: StateService) {
-    this.isLoggedIn = this.state.isLoggedIn
-    this.updateIsloggedIn = this.state.updateIsLoggedIn.subscribe((data:any) => {
-      this.isLoggedIn = data
-    })
-    this.activeUser = this.state.activeUser
-    this.updateActiveUser = this.state.updateActiveUser.subscribe((data:any) => {
-      this.activeUser = data
-    })
-    this.nav = this.state.nav
-    this.updateNav = this.state.updateNav.subscribe((data:any) => {
-      this.nav = data
+  getBadge() {
+    switch (this.userProps.plan) {
+      case 'family':
+        this.badge = '🥈'
+        break
+      case 'business':
+        this.badge = '🥇'
+        break
+      default:
+        this.badge = ''
+    }
+  }
+
+  constructor(private router: Router, private state: StateService, private http: HttpClient) {
+    this.state.updateUserProps.subscribe(data => {
+      this.userProps = data
+      this.nav = [
+        { page: 'Home', link: 'home' },
+        { page: 'Task', link: 'user/' + this.userProps.username + '/task' },
+        { page: 'Admin Console', link: 'user/admin/admin-console' },
+        { page: 'Upgrade', link: 'user/' + this.userProps.username + '/upgrade' },
+      ]
+      this.getBadge()
     })
   }
 
   ngOnInit() {
-    this.state.checkPlan()
+    this.userProps = false
+    this.nav = [
+      { page: 'Home', link: 'home' },
+      { page: 'Task', link: ['user', this.userProps ? this.userProps.username : 'default', 'task'] },
+      { page: 'Admin Console', link: 'user/admin/admin-console' }
+    ]
+    if (localStorage.getItem('BearerToken')) {
+      this.http.get(this.state.apiUrl+'userInfo').pipe(
+        catchError(e => {
+          this.router.navigate(['login'])
+          return throwError(e)
+        })
+      ).subscribe(data => {
+        this.userProps = data
+        this.state.updateUserProps.next(data)
+        this.getBadge
+      })
+    }
   }
   
 }

@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
+import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subject } from 'rxjs';
+import { StateService } from 'src/app/shared/state.service';
 
 @Component({
   selector: 'app-task',
@@ -10,105 +13,109 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class TaskComponent implements OnInit {
 
-  task:any = []
+  task:any = {
+    completed:false,
+    incompleted:false,
+  }
+  updateTask = new Subject()
+  userProps:any
   newTask:any
   completedTask: any
   incompletedTask: any
   taskEdit:any
-  editTitle:any
-  editCreatedDate:any
-  editDueDate:any
-  editLocation:any
-  editContact:any
-  editDescription:any
-  editId:any
-
-  getTask() {
-    this.http.get('http://localhost:3000/task').subscribe((data:any) => {
-      this.task = data
-      this.updateTask()
-    })
-  }
+  formTask:any
+  idToEdit:any
 
   addTask(e:any) {
     if (e.key == 'Enter') {
-      this.http.post('http://localhost:3000/task', { title: this.newTask.value}).subscribe((data: any) => {
-        this.task = data
+      this.http.post('http://localhost:3000/tasks', { title: this.newTask.value, id:this.state.userProps.id}).subscribe((data: any) => {
+        this.task.incompleted = [data, ...this.task.incompleted]
         this.newTask.setValue('')
-        this.updateTask()
+        // this.task = this.task.sort((a:any, b:any) => b.id - a.id)
+        // this.task = {
+        //   completed:this.task.filter((item:any) => item.completed == true),
+        //   incompleted:this.task.filter((item:any) => item.completed == false),
+        // }
       })
     }
   }
 
   completeTask(id:any) {
-    this.http.post('http://localhost:3000/task/completed', { id: id }).subscribe((data: any) => {
-      this.task = data
-      this.updateTask()
+    this.http.post('http://localhost:3000/tasks/completed', { id: id }).subscribe((data: any) => {
+      this.task = {
+        completed:[this.task.incompleted.find((item:any) => item.id == data.id), ...this.task.completed],
+        incompleted:this.task.incompleted.filter((item:any) => item.id !== data.id),
+      }
     })
   }
 
   editTask() {
-    const body = {
-      id: this.editId,
-      title: this.taskEdit.controls.editTitle.value ? this.taskEdit.controls.editTitle.value : null,
-      createdDate: this.taskEdit.controls.editCreatedDate.value ? this.taskEdit.controls.editCreatedDate.value : null,
-      dueDate: this.taskEdit.controls.editDueDate.value ? this.taskEdit.controls.editDueDate.value : null,
-      contact: this.taskEdit.controls.editContact.value ? this.taskEdit.controls.editContact.value : null,
-      location: this.taskEdit.controls.editLocation.value ? this.taskEdit.controls.editLocation.value : null,
-      description: this.taskEdit.controls.editDescription.value ? this.taskEdit.controls.editDescription.value : null,
+    const content = {
+      title: this.formTask.get('title').value,
+      createdDate: this.formTask.get('createdDate').value,
+      dueDate: this.formTask.get('dueDate').value,
+      contact: this.formTask.get('contact').value,
+      location: this.formTask.get('location').value,
+      description: this.formTask.get('description').value,
     }
-    this.http.post('http://localhost:3000/task/edit', body).subscribe((data: any) => {
-      this.task = data
-      if (data) {
-        this._snackBar.open('Your task has been successfully updated', 'Close', { duration: 2000 })
-      }
-      this.updateTask()
+    this.http.post('http://localhost:3000/tasks/editTask', {id:this.idToEdit, content:content}).subscribe((data:any) => {
+      this._snackBar.open('Your task has been successfully updated', 'Close', { duration: 2000 })
+      this.task.incompleted = this.task.incompleted.map((item:any) => {
+        if (item.id == data.id) {
+          return data
+        } else {
+          return item
+        }
+      })
     })
   }
 
   deleteTask(id:number) {
-    this.http.delete('http://localhost:3000/task', { body: { id: id } }).subscribe((data:any) => {
+    this.http.delete('http://localhost:3000/tasks', { body: { id: id } }).subscribe((data:any) => {
       this.task = data
-      this.updateTask()
+      this.task = this.task.sort((a:any, b:any) => b.id - a.id)
+      this.task = {
+        completed:this.task.filter((item:any) => item.completed == true),
+        incompleted:this.task.filter((item:any) => item.completed == false),
+      }
     })
   }
 
-  updateTask() {
-    this.completedTask = this.task.filter((item:any) => item.completed == true)
-    this.completedTask = this.completedTask.map((item:any) => {
-      const date = this.convertMonthDate(item.date)
-      return { ...item, date: date }
-    })
-    this.incompletedTask = this.task.filter((item:any) => item.completed == false)
-    this.incompletedTask = this.incompletedTask.map((item:any) => {
-      const date = this.convertMonthDate(item.date)
-      return { ...item, date: date }
-    })
-  }
 
-  constructor(private http: HttpClient, private fb: FormBuilder, private _snackBar: MatSnackBar) {
-    this.getTask()
-    this.newTask = new FormControl()
-    this.taskEdit = this.fb.group({
-      editTitle: [''],
-      editCreatedDate: [''],
-      editDueDate: [''],
-      editContact: [''],
-      editLocation: [''],
-      editDescription: [''],
+  constructor(private http: HttpClient, private fb: FormBuilder, private _snackBar: MatSnackBar, private state: StateService) {
+    this.http.get('http://localhost:3000/tasks').subscribe((data:any) => {
+      this.task = data
+      this.task = this.task.sort((a:any, b:any) => b.id - a.id)
+      this.task = {
+        completed:this.task.filter((item:any) => item.completed == true),
+        incompleted:this.task.filter((item:any) => item.completed == false),
+      }
+    })
+    this.formTask = this.fb.group({
+      title: [''],
+      createdDate: [''],
+      dueDate: [''],
+      contact: [''],
+      location: [''],
+      description: [''],
+    })
+    this.updateTask.subscribe(data => {
+      this.task = data
+    })
+    this.state.updateUserProps.subscribe(data => {
+      this.userProps = data
     })
   }
 
   generateEditTask(task:any) {
-    const { id, title, contact, date, description, dueDate, location } = task
-    this.taskEdit.controls.editTitle.setValue(title ? title : '')
-    this.taskEdit.controls.editContact.setValue(contact ? contact : '')
-    this.taskEdit.controls.editCreatedDate.setValue(date ? date : '')
-    this.taskEdit.controls.editDescription.setValue(description ? description : '')
-    this.taskEdit.controls.editDueDate.setValue(dueDate ? dueDate : '')
-    this.taskEdit.controls.editLocation.setValue(location ? location : '')
-    this.editId = id
-    // this.updateTaskEdit()
+    const { id, title, contact, createdDate, description, dueDate, location } = task
+    this.formTask.controls.title.setValue(title)
+    this.formTask.controls.contact.setValue(contact)
+    this.formTask.controls.createdDate.setValue(createdDate.replace('?', ' '))
+    this.formTask.controls.description.setValue(description)
+    this.formTask.controls.dueDate.setValue(dueDate)
+    this.formTask.controls.location.setValue(location)
+    this.idToEdit = id
   }
 
   convertMonthDate(time:any) {
@@ -127,6 +134,15 @@ export class TaskComponent implements OnInit {
   // }
  
   ngOnInit(): void {
+    this.newTask = new FormControl()
+    this.taskEdit = this.fb.group({
+      editTitle: [''],
+      editCreatedDate: [''],
+      editDueDate: [''],
+      editContact: [''],
+      editLocation: [''],
+      editDescription: [''],
+    })
   }
 
 }

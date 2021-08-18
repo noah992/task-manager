@@ -8,17 +8,17 @@
             <div class="login-row">
                 <mat-form-field appearance="outline">
                     <mat-label>username</mat-label>
-                    <input matInput [formControl]='username' (keyup)='switchButton()'>
+                    <input matInput [formControl]='formUsername' (keyup)='switchButton()'>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>password</mat-label>
-                    <input matInput [formControl]='password' (keyup)='switchButton()'>
+                    <input matInput [formControl]='formPassword' (keyup)='switchButton()'>
                 </mat-form-field>
             </div>
             <div class="login-row">
-                <button mat-raised-button (click)='login()' [disabled]='isActiveButton'>Log In</button>
+                <button mat-raised-button (click)='login()' [disabled]='domBool.isActiveButton'>Log In</button>
             </div>
-            <div class="invalid-user" *ngIf='isInvalidUser'>username or password is wrong</div>
+            <div class="invalid-user" *ngIf='!domBool.isValidUser'>username or password is wrong</div>
         </div>
     </div>
 </div>
