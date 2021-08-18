@@ -7,6 +7,8 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+// add token everytime http request sent
+
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
 
@@ -19,20 +21,6 @@ export class ApiInterceptor implements HttpInterceptor {
         'Authorization': `Bearer ${localStorage.getItem('BearerToken')}`
       }
     })
-    // if (request.headers.keys().find(item => item == 'Authorization')) {
-    //   newRequest = request.clone({
-    //     setHeaders: {
-    //       'Content-Type': 'application/json',
-    //     }
-    //   })
-    // } else {
-    //   newRequest = request.clone({
-    //     setHeaders: {
-    //       'Content-Type': 'application/json',
-    //       'Authorization': `Bearer ${localStorage.getItem('BearerToken')}`
-    //     }
-    //   })
-    // }
     return next.handle(newRequest);
   }
 }

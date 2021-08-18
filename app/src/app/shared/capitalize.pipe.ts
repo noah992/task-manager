@@ -1,5 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+// capitalize username
+
 @Pipe({
   name: 'capitalize'
 })

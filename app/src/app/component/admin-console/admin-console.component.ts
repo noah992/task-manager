@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { StateService } from 'src/app/shared/state.service';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-admin-console',
@@ -10,21 +12,22 @@ import { StateService } from 'src/app/shared/state.service';
 })
 export class AdminConsoleComponent implements OnInit {
 
-  username:any
-  password:any
-  email:any
-  user:any
-  updateUser:any
-  oldUsername:any
-  oldEmail:any
+  username:any // username form
+  password:any // password form
+  email:any // email form
+  user:any // user list
+  oldUsername:any // store previous username for update
+  oldEmail:any // store previous email for update
   domBool = {
     isValidButton:false,
     isValidUsername:true,
     currentUserId: 0,
     currentIndex: 0,
     tab:'add',
-  }
+    error:'',
+  } // state for dom
 
+  // button will be active when all forms are filled for add user tab
   switchActiveButton() {
     if (this.username.value && this.password.value) {
       this.domBool.isValidButton = true
@@ -33,6 +36,7 @@ export class AdminConsoleComponent implements OnInit {
     }
   }
 
+  // button will be active when all forms are filled for edit user tab
   switchEditActiveButton() {
     if (this.username.value && this.email.value) {
       this.domBool.isValidButton = true
@@ -41,46 +45,34 @@ export class AdminConsoleComponent implements OnInit {
     }
   }
 
-  switchIsValidUsername() {
-    const username = this.username.value
-    this.http.get('http://localhost:3000/users').subscribe((data:any) => {
-      if(data.find((item:any) => item.username == username)) {
-        this.domBool.isValidUsername = false
-      } else {
-        this.domBool.isValidUsername = true
-      }
-    }) 
-  }
-
+  // create new user
   addUser() {
-    this.http.post('http://localhost:3000/users/signup', {username:this.username.value, password:this.password.value}).subscribe((data:any) => {
+    this.http.post(this.state.apiUrl+'users/signup', {username:this.username.value, password:this.password.value})
+    .pipe(catchError(e => {
+      this.domBool.isValidUsername = false
+      this.domBool.error = e.error
+      return throwError(e)
+    }))
+    .subscribe((data:any) => {
       this.username.setValue('')
       this.password.setValue('')
       this.state.updateUser.next(data)
-      console.log(222, data)
-      console.log(this.user)
-      // this.user = this.user.map((item:any) => {
-      //   if (this.oCredentil.find(i => i.username == item.username)) {
-      //     const oP = this.oCredentil.find(oI => oI.username == item.username)
-      //     return {...item, oPassword:oP!.password}
-      //   } else {
-      //     return item
-      //   }
-      // })
-      // this.state.getUser()
     })
   }
 
+  // delete a user
   deleteUser(id:number) {
     this.state.deleteUser(id)
     this.username.setValue('')
     this.email.setValue('')
   }
 
+  // edit user information
   editUser() {
     this.state.editUser(this.domBool.currentUserId, this.username.value, this.email.value)
   }
 
+  // activate edit page for user infomation
   activateEdit(id:number, username:string, email:string) {
     this.domBool.currentUserId = id
     this.oldUsername = username
@@ -91,6 +83,7 @@ export class AdminConsoleComponent implements OnInit {
     this.email.setValue(email)
   }
 
+  // disable edit tab byu default
   switchTab(e:any) {
     if (e.index == 0) {
       this.domBool.tab = 'add'
@@ -107,24 +100,9 @@ export class AdminConsoleComponent implements OnInit {
     this.user = this.state.user
     this.state.updateUser.subscribe((data:any) => {
       this.user = data
-      // this.user = this.user.map((item:any) => {
-      //   if (this.oCredentil.find(i => i.username == item.username)) {
-      //     const oP = this.oCredentil.find(oI => oI.username == item.username)
-      //     return {...item, oPassword:oP!.password}
-      //   } else {
-      //     return item
-      //   }
-      // })
     })
     this.state.getUser()
   }
-
-  oCredentil = [
-    {username:'admin',password:'helloworld'},
-    {username:'whale', password:'mammal'},
-    {username:'frog', password:'amphobian'},
-    {username:'lizard', password:'reptile'}
-  ]
 
   ngOnInit(): void {
   }

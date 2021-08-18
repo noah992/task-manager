@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
     isValidUser:true
   }
 
+  // button will be acative when all forms are filled
   switchButton() {
     if (this.formUsername.value && this.formPassword.value) {
       this.domBool.isActiveButton = false
@@ -29,7 +30,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.http.post(this.state.apiUrl+'login', {username:this.formUsername.value, password:this.formPassword.value})
+    this.http.post(this.state.apiUrl+'users/login', {username:this.formUsername.value, password:this.formPassword.value})
     .pipe(catchError((e) => {
       this.domBool.isValidUser = false
       return throwError(e)
@@ -37,15 +38,6 @@ export class LoginComponent implements OnInit {
     .subscribe((data:any) => {
       localStorage.setItem('BearerToken', data.bearerToken)
       this.state.updateUserProps.next(data)
-      // if (data.validity) {
-      //   
-      //   this.state.login(this.username.value)
-      //   this.state.userNav()
-      //   this.state.checkPlan()
-      //   this.router.navigate(['home'])
-      // } else {
-      //   this.isInvalidUser = true
-      // }
       this.router.navigate(['home'])
     })
   }

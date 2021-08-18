@@ -1,5 +1,7 @@
 import { Directive, ElementRef, HostListener } from '@angular/core';
 
+// change color when hover in plan page
+
 @Directive({
   selector: '[appUpgrade]'
 })

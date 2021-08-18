@@ -3,6 +3,8 @@ var router = express.Router();
 var env = require('../environment/environment.json');
 var auth = require('../middleware/auth');
 
+
+// set up mondodb
 var mongoose = require('mongoose');
 mongoose.connect(env.db, { useNewUrlParser: true })
 mongoose.connection.on( 'connected', function(){
@@ -24,67 +26,9 @@ var Tasks = new Schema({
 
 var tasksModel = mongoose.model('tasks', Tasks);
 
-// var Uusers = new Schema({
-//   id:Number,
-//   username:String,
-//   password:String,
-//   email:String,
-//   fname:String,
-//   lname:String,
-//   plan:String,
-// }, {collection:'users'})
-
-// var usersModel = mongoose.model('uusers', Uusers);
-
-// let tempUsers
-
-// usersModel.find({}, function(er, doc) {
-//     tempUsers = doc
-//     let tempTasks
-// tasksModel.find({}, function(e, d) {
-//     tempTasks = d
-//     tempUsers.forEach(tu => {
-//         tempTasks.forEach(item => {
-//             let newItem
-//             if (tu.id == item.userId) {
-//                 newItem = tu
-//                 tasksModel.findOneAndUpdate({id:item.id}, {refId:tu._id}, {new:true, upsert:true}, function (e, d) {
-//                     console.log(21, tu)
-//                 })
-//             }
-//         })
-//     })
-// })
-// })
-
-// usersModel.find({}, function (e, d) {
-//     tasksModel.find({}, function (ee, dd) {
-//     for (let i = 0; i < 201; i++) {
-//         const nnn = d.find(item => dd[i].userId == item.id)
-//         // const nnn = d.find(item => item.id == i)
-//         if (nnn) {
-//             tasksModel.findOneAndUpdate({id:i}, {ref:nnn._id}, {new:true, upsert:true}, function (e, d) {
-//                 // console.log(33, d)
-//             })
-//         }
-//     }
-//     })
-// })
-
-// function getTime() {
-//     const date = new Date()
-//     return date.getHours()+':'+date.getMinutes()+'?'+date.getDate()+'/'+date.getMonth()+"/"+date.getFullYear()
-// }
-
-// tasksModel.find({}, function(e,d) {
-//     d.forEach(item => {
-//         tasksModel.findOneAndUpdate({_id:item._id}, {createdDate:getTime()} , {new:true, upsert:true}, function(e,d) {
-//             console.log(d)
-//         })
-//     })
-// })
-
+// new task id
 let gTaskId
+
 
 function init() {
     tasksModel.find({}, function(e,d) {
@@ -92,7 +36,7 @@ function init() {
     })
 }
 
-
+// get all tasks
 async function getTasks() {
     let tasks;
     await tasksModel.find({}, function(e, d) {
@@ -102,6 +46,8 @@ async function getTasks() {
     return tasks
 }
 
+
+// update a task
 function updateTask(taskId, update) {
     console.log(taskId)
     tasksModel.findOneAndUpdate({id:taskId}, update, {new:true, upsert:true}, function(e,d) {
@@ -109,13 +55,15 @@ function updateTask(taskId, update) {
     })
 }
 
+// create new task
 async function addTask(userTask) {
     const newTask = new tasksModel(userTask)
     newTask.save(function(e, d) {
       if (e) { console.log(e) }
     })
 }
-  
+
+// delete task
 function deleteTask(taskId) {
     tasksModel.deleteOne({id:taskId}, function(e, d) {
       if (e) { console.log(e) }
@@ -123,12 +71,14 @@ function deleteTask(taskId) {
 }
 
 /* GET users listing. */
+// get user tasks
 router.get('/', auth, async function(req, res, next) {
     let tasks = await getTasks()
     tasks = tasks.filter(item => item.ref == req._id)
     res.send(tasks)
 });
 
+// create new task
 router.post('/', auth, async function(req, res, next) {
     const newTask = {
         ref:req._id,
@@ -142,6 +92,7 @@ router.post('/', auth, async function(req, res, next) {
     res.send(newTask)
 })
 
+// delete a task
 router.delete('/', auth, async function(req, res, next) {
     await deleteTask(req.body.id)
     let tasks = await getTasks()
@@ -149,6 +100,7 @@ router.delete('/', auth, async function(req, res, next) {
     res.send(tasks)
 })
 
+// when task completed
 router.post('/completed', auth, async function(req, res, next) {
     const taskId = req.body.id
     console.log(req.body)
@@ -156,12 +108,14 @@ router.post('/completed', auth, async function(req, res, next) {
     res.send({id:req.body.id})
 })
 
+// edit task details
 router.post('/editTask', auth, async function(req, res, next) {
     const taskId = req.body.id
     await updateTask(taskId, req.body.content)
     res.send({id:req.body.id, ...req.body.content})
 })
 
+// time information for tasks
 function getTime() {
     const date = new Date()
     return ('0'+date.getHours()).slice(-2)+':'+('0'+date.getMinutes()).slice(-2)+' '+date.getMonth()+'/'+date.getDate()+"/"+date.getFullYear()

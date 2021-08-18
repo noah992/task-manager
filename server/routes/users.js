@@ -5,6 +5,8 @@ var env = require('../environment/environment.json');
 var auth = require('../middleware/auth');
 var bcrypt = require('bcrypt');
 
+
+// connect to mongodb
 var mongoose = require('mongoose');
 mongoose.connect("mongodb://127.0.0.1:27017/Angular", { useNewUrlParser: true, useUnifiedTopology: true, })
 mongoose.connection.on( 'connected', function(){
@@ -24,6 +26,8 @@ var Users = new Schema({
 
 var usersModel = mongoose.model('users', Users);
 
+
+// get all users
 async function getUsers() {
   let users;
   await usersModel.find({}, function(e, d) {
@@ -33,6 +37,7 @@ async function getUsers() {
   return users
 }
 
+// get one user information
 async function getUserInfo(req, res) {
   const user = await usersModel.findOne({_id:req._id})
   if (!user) res.status(400).send('Token is invalid')
@@ -49,18 +54,21 @@ async function getUserInfo(req, res) {
   return send
 }
 
-async function updateUser(id, update) {
-  usersModel.findOneAndUpdate({id:id}, update, {new:true, upsert:true}, function(e,d) {
+// update user information
+async function updateUser(_id, update) {
+  usersModel.findOneAndUpdate({_id:_id}, update, {new:true, upsert:true}, function(e,d) {
     if (e) { console.log(e) }
   })
 }
 
+// update user information
 async function configureProfile(_id, update) {
   usersModel.findOneAndUpdate({_id:_id}, update, {new:true, upsert:true}, function(e,d) {
     if (e) { console.log(e) }
   })
 }
 
+// save new user
 async function addUser(userInfo) {
   return new Promise((res,rej) => {
     const newUser = new usersModel(userInfo)
@@ -73,86 +81,87 @@ async function addUser(userInfo) {
   })
 }
 
-async function deleteUser(id) {
-  await usersModel.deleteOne({id:id}, function(e, d) {
-    if (e) { console.log(e) }
+// delete user
+async function deleteUser(id,res) {
+  await usersModel.deleteOne({_id:id}, function(e, d) {
+    if (e) { 
+      console.log(e)
+      // res.status(400).send('This user is invalid')
+    }
   })
 }
 
-// updateUser()
 
 /* GET users listing. */
+
+// get default users
 router.get('/', async function(req, res, next) {
   const users = await getUsers()
-  const aaa = {
-    admin:'helloworld',
-    whale:'mammal',
-    frog:'amphobian',
-    lizard:'reptile',
-  }
-  // await users.forEach(item => {
-    // let np
-    // bcrypt.hash(item.password, 10, function(e, d) {
-    //   console.log(d)
-    //   console.log
-    //   np = d
-    //   updateUser(item._id, {password:np})
-    //   bcrypt.compare(item.password, d, function(e, d) {
-    //     console.log(d)
-    //   })
-    // })
-    // const np = aaa[item.username]
-    // updateUser(item._id, {password:np})
-  // })
-
   res.send(users)
 });
 
+
+// delete user
 router.delete('/', auth, async function(req, res, next) {
-  await deleteUser(req.body.id)
-  const users = await getUsers()
-  res.send(users)
+  deleteUser(req.body.id, res).then(() => {
+    const users = getUsers()
+    return users
+  }).then(data => {
+    res.send(data)
+  })
 })
 
+
+// add new user
 router.post('/signup', async function(req, res, next) {
-  const hash = await new Promise((resolve, reject) => {
-    bcrypt.hash(req.body.password, 10, function(e, d) {
-      resolve(d)
+
+  await getUsers().then(data => {
+    data.forEach(item => {
+      if (item.username == req.body.username) {
+        return res.status(400).send('This username is already used')
+      }
+    })
+  }).then(data => {
+    if (req.body.password.length < 5) {
+      return res.status(400).send('Password must be over 4 characters')
+    } else if (req.body.username.length < 5) {
+      return res.status(400).send('Username must be over 4 characters')
+    }
+    // hash password
+    const hash = new Promise((resolve, reject) => {
+      bcrypt.hash(req.body.password, 10, function(e, d) {
+        resolve(d)
+      })
+    })
+    return hash
+  }).then(data => {
+    const newUser = {
+      username:req.body.username,
+      password: data,
+      email:req.body.username + '@taskmanager.com',
+      plan:'free',
+      fname:'yuri',
+      lname:req.body.username,
+    }
+  
+    addUser(newUser).then(data => {
+      const users = getUsers()
+      return users
+    }).then(data => {
+      res.send(data)
     })
   })
-  const newUser = {
-    username:req.body.username,
-    password: hash,
-    email:req.body.username + '@taskmanager.com',
-    plan:'free',
-    fname:'yuri',
-    lname:req.body.username.username,
-  }
-  await addUser(newUser).then(async data => {
-    const users = await getUsers()
-    console.log(111,users)
-
-    res.send(users)
-  })
 })
 
-router.get('/:username', auth, async function(req, res, next) {
-  // const user = await usersModel.findOne({_id:req._id})
-  // if (!user) res.status(400).send('Token is invalid')
 
-  // const send = {
-  //   id:user.id,
-  //   username:user.username,
-  //   password:user.password,
-  //   email:user.email,
-  //   plan:user.plan,
-  //   fname:user.fname,
-  //   lname:user.lname
-  // }
+// get one user information
+router.get('/:username', auth, async function(req, res, next) {
   const userInfo = await getUserInfo(req, res)
   res.send(userInfo)
 })
 
+
+// login authentication
 router.post('/login', async function(req, res, next) {
 
   let user = await usersModel.findOne({username:req.body.username})
@@ -174,6 +183,8 @@ router.post('/login', async function(req, res, next) {
   res.send(userInfo)
 });
 
+
+// edit user property
 router.get('/edit/:plan', auth, async function(req, res, next) {
   const update = {
     plan:req.params.plan,
@@ -183,6 +194,8 @@ router.get('/edit/:plan', auth, async function(req, res, next) {
   res.send(userInfo)
 })
 
+
+// edit user information
 router.post('/edit', async function(req, res, next) {
   const update = {
     username:req.body.username,

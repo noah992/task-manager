@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { StateService } from 'src/app/shared/state.service';
 
 @Component({
   selector: 'app-user-list',
@@ -8,6 +7,7 @@ import { StateService } from 'src/app/shared/state.service';
 })
 export class UserListComponent implements OnInit {
   
+  // default user list
   users = [
     {id:1, username:'admin', password:'helloworld', email:'admin@taskmanager.com', fname:'juri', lname:'admin', plan:'free' },
     {id:2, username:'whale', password:'mammal', email:'whale@taskmanager.com', fname:'juri', lname:'whale', plan:'free' },

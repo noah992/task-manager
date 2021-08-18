@@ -12,17 +12,16 @@ import { throwError } from 'rxjs';
 })
 export class AppComponent implements OnInit {
 
-  nav:any
-  updateNav:any
-  userProps:any
-  activeUser:any
-  updateActiveUser:any
-  badge = ''
+  nav:any // navigation links
+  userProps:any // store user properties
+  badge = '' // get badge if user joined a plan
 
+  // navigate to logoin page
   login() {
     this.router.navigate(['login'])
   }
 
+  // remove token from local storage, initialize app
   logout() {
     localStorage.removeItem('BearerToken')
     this.state.updateUserProps.next(false)
@@ -34,6 +33,7 @@ export class AppComponent implements OnInit {
     ]
   }
 
+  // get badge for the plan
   getBadge() {
     switch (this.userProps.plan) {
       case 'family':
@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
         this.badge = ''
     }
   }
-
+  
   constructor(private router: Router, private state: StateService, private http: HttpClient) {
     this.state.updateUserProps.subscribe(data => {
       this.userProps = data
@@ -68,7 +68,7 @@ export class AppComponent implements OnInit {
       { page: 'Admin Console', link: 'user/admin/admin-console' }
     ]
     if (localStorage.getItem('BearerToken')) {
-      this.http.get(this.state.apiUrl+'userInfo').pipe(
+      this.http.get(this.state.apiUrl+'users/userInfo').pipe(
         catchError(e => {
           this.router.navigate(['login'])
           return throwError(e)

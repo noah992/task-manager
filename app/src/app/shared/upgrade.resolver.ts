@@ -7,6 +7,8 @@ import {
 import { Observable, of } from 'rxjs';
 import { StateService } from './state.service';
 
+// resolver to pass user information for upgrade page
+
 @Injectable({
   providedIn: 'root'
 })

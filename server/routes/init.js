@@ -1,3 +1,5 @@
+// clean database and set up default data
+
 var bcrypt = require('bcrypt');
 
 var express = require('express');

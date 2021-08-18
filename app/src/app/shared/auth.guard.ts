@@ -3,6 +3,8 @@ import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } fro
 import { Observable } from 'rxjs';
 import { StateService } from './state.service';
 
+// guest user can acccess only login and home page
+
 @Injectable({
   providedIn: 'root'
 })

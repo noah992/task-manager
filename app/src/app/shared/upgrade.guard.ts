@@ -3,6 +3,8 @@ import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot, UrlTree } f
 import { Observable } from 'rxjs';
 import { PaymentComponent } from '../component/upgrade/payment/payment.component';
 
+// when user leaves with filled information but not submitted in upgrade page
+
 @Injectable({
   providedIn: 'root'
 })
