@@ -14,12 +14,22 @@ cd app
 ng serve --open
 ```
 
+Run mongodb
+
+mongodb://127.0.0.1:27017/Angular
+
+collections
+* users
+* tasks
+
 
 ## Features
 * Authorization
-  * Guard
-  * API for user credentials at http://localhost:3000/users
 * Authentication 
-  * API for tasks at http://localhost:3000/task 
 * Http interceptor
 * Dynamic form
+* Bcrypt
+* Jwt
+* Guard
+* Directive
+* Pipe
