@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import jwt_decode from 'jwt-decode';
+import { UseProps } from './userProps';
 
 @Injectable({
   providedIn: 'root'
@@ -34,11 +37,16 @@ export class StateService {
     })
   }
   
-  constructor(private http: HttpClient) {
-    this.userProps = null
-    this.updateUserProps.subscribe(data => {
-      this.userProps = data
-    })
+  constructor(private http: HttpClient, private router: Router) {
+    try {
+      const token = localStorage.getItem('BearerToken')
+      this.userProps = jwt_decode(token!)
+    } catch(e) {
+      this.userProps = null
+    }
     
+    this.updateUserProps.subscribe((data) => {
+      this.userProps = data
+    }) 
   }
 }

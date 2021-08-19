@@ -170,7 +170,7 @@ router.post('/login', async function(req, res, next) {
   const validPassword = await bcrypt.compare(req.body.password, user.password)
   if (!validPassword) res.status(400).send('Username or password is wrong')
 
-  const token = jwt.sign({_id:user._id}, env.jwtPrivateKey)
+  const token = jwt.sign({_id:user._id, username: user.username}, env.jwtPrivateKey)
   const userInfo = {
     username:user.username,
     bearerToken:token,

@@ -29,7 +29,7 @@
                         <mat-form-field appearance='outline'>
                             <mat-label>password</mat-label>
                             <input matInput [formControl]='password' (keyup)='switchActiveButton()' #addPassword>
-                            <mat-hint [ngStyle]='{ color: addPassword.value.length < 4 ? "grey" : "black" }'>Min 5 characters: {{addPassword.value.length}} / 5</mat-hint>
+                            <mat-hint [ngStyle]='{ color: addPassword.value.length < 5 ? "grey" : "black" }'>Min 5 characters: {{addPassword.value.length}} / 5</mat-hint>
                         </mat-form-field>
                     </div>
                     <div class="button-wrapper">
@@ -53,7 +53,7 @@
                         <mat-form-field appearance='outline'>
                             <mat-label>email</mat-label>
                             <input matInput [formControl]='email' (keyup)='switchEditActiveButton()' #editEmail>
-                            <mat-hint [ngStyle]='{ color: editEmail.value.length < 4 ? "grey" : "black" }'>Min 4 characters: {{editEmail.value.length}} / 4</mat-hint>
+                            <mat-hint [ngStyle]='{ color: editEmail.value.length < 5 ? "grey" : "black" }'>Min 5 characters: {{editEmail.value.length}} / 5</mat-hint>
                         </mat-form-field>
                     </div>
                     <div class="button-wrapper">
