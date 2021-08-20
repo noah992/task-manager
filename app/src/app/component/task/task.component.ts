@@ -77,8 +77,28 @@ export class TaskComponent implements OnInit {
     })
   }
 
+  // activate edit page for a task
+  generateEditTask(task:any) {
+    const { id, title, contact, createdDate, description, dueDate, location } = task
+    this.formTask.controls.title.setValue(title)
+    this.formTask.controls.contact.setValue(contact)
+    this.formTask.controls.createdDate.setValue(createdDate)
+    this.formTask.controls.description.setValue(description)
+    this.formTask.controls.dueDate.setValue(dueDate)
+    this.formTask.controls.location.setValue(location)
+    this.idToEdit = id
+  }
+
+  convertMonthDate(time:any) {
+    return ('0' + time.split("?")[0].split(':')[0]).slice(-2) + ':' + ('0' + time.split("?")[0].split(':')[1]).slice(-2) + ' ' + time.split("?")[1].split('/')[1] + '/' + time.split("?")[1].split('/')[0]+ '/' + time.split("?")[1].split('/')[2]
+  }
 
   constructor(private http: HttpClient, private fb: FormBuilder, private _snackBar: MatSnackBar, private state: StateService) {
+    
+  }
+ 
+  ngOnInit(): void {
+    this.newTask = new FormControl()
     this.http.get(this.state.apiUrl+'tasks').subscribe((data:any) => {
       this.task = data
       this.task = this.task.sort((a:any, b:any) => b.id - a.id)
@@ -101,26 +121,6 @@ export class TaskComponent implements OnInit {
     this.state.updateUserProps.subscribe(data => {
       this.userProps = data
     })
-  }
-
-  // activate edit page for a task
-  generateEditTask(task:any) {
-    const { id, title, contact, createdDate, description, dueDate, location } = task
-    this.formTask.controls.title.setValue(title)
-    this.formTask.controls.contact.setValue(contact)
-    this.formTask.controls.createdDate.setValue(createdDate)
-    this.formTask.controls.description.setValue(description)
-    this.formTask.controls.dueDate.setValue(dueDate)
-    this.formTask.controls.location.setValue(location)
-    this.idToEdit = id
-  }
-
-  convertMonthDate(time:any) {
-    return ('0' + time.split("?")[0].split(':')[0]).slice(-2) + ':' + ('0' + time.split("?")[0].split(':')[1]).slice(-2) + ' ' + time.split("?")[1].split('/')[1] + '/' + time.split("?")[1].split('/')[0]+ '/' + time.split("?")[1].split('/')[2]
-  }
- 
-  ngOnInit(): void {
-    this.newTask = new FormControl()
   }
 
 }

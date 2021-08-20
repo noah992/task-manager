@@ -24,7 +24,8 @@
                     <div class="input-row">
                         <mat-form-field appearance='outline'>
                             <mat-label>username</mat-label>
-                            <input matInput [formControl]='username' (keyup)='switchActiveButton()'>
+                            <input matInput [formControl]='username' (keyup)='switchActiveButton()' #addUsername>
+                            <mat-hint [ngStyle]='{ color: addUsername.value.length < 5 ? "grey" : "black" }'>Min 5 characters: {{addUsername.value.length}} / 5</mat-hint>
                         </mat-form-field>
                         <mat-form-field appearance='outline'>
                             <mat-label>password</mat-label>

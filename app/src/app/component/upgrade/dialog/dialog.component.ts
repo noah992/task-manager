@@ -11,14 +11,14 @@ import { PaymentComponent } from '../payment/payment.component';
 })
 export class DialogComponent implements OnInit {
 
-  constructor(public dialogRef: MatDialogRef<PaymentComponent>, @Inject(MAT_DIALOG_DATA) public data: any, ) { }
-
-  ngOnInit(): void {
-  }
-
   //close dialog
   closeDialog(): void {
     this.dialogRef.close(true);
+  }
+
+  constructor(public dialogRef: MatDialogRef<PaymentComponent>, @Inject(MAT_DIALOG_DATA) public data: any, ) { }
+
+  ngOnInit(): void {
   }
 
 }

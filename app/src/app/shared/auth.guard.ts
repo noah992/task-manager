@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { StateService } from './state.service';
-import jwt_decode from 'jwt-decode';
 
 // guest user can acccess only login and home page
 
@@ -31,17 +30,10 @@ export class AuthGuard implements CanActivate {
   }
 
   constructor(private state: StateService) {
-    this.userProps = this.state.userProps
+    this.userProps = state.userProps
     state.updateUserProps.subscribe(data => {
       this.userProps = data
     })
-    
-    // try {
-    //   let token = localStorage.getItem('BearerToken')
-    //   this.userProps = jwt_decode(token!)
-    // } catch(e) {
-      
-    // }
   }
   
 }

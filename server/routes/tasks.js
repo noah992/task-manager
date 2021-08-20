@@ -49,7 +49,6 @@ async function getTasks() {
 
 // update a task
 function updateTask(taskId, update) {
-    console.log(taskId)
     tasksModel.findOneAndUpdate({id:taskId}, update, {new:true, upsert:true}, function(e,d) {
         if (e) { console.log(e) }
     })

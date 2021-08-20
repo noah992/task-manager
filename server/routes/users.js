@@ -115,20 +115,24 @@ router.delete('/', auth, async function(req, res, next) {
 // add new user
 router.post('/signup', async function(req, res, next) {
 
-  await getUsers().then(data => {
+  getUsers().then(data => {
     data.forEach(item => {
       if (item.username == req.body.username) {
-        return res.status(400).send('This username is already used')
+        res.status(400).send('This username is already used')
+        throw new Error ('wooo')
       }
     })
-  }).then(data => {
+  }).then(async data => {
+    console.log('data', data)
     if (req.body.password.length < 5) {
-      return res.status(400).send('Password must be over 4 characters')
+      res.status(400).send('Password must be over 4 characters')
+      throw new Error ('Password must be over 4 characters')
     } else if (req.body.username.length < 5) {
-      return res.status(400).send('Username must be over 4 characters')
+      res.status(400).send('Username must be over 4 characters')
+      throw new Error ('Username must be over 4 characters')
     }
     // hash password
-    const hash = new Promise((resolve, reject) => {
+    const hash = await new Promise((resolve, reject) => {
       bcrypt.hash(req.body.password, 10, function(e, d) {
         resolve(d)
       })
@@ -165,16 +169,15 @@ router.get('/:username', auth, async function(req, res, next) {
 router.post('/login', async function(req, res, next) {
 
   let user = await usersModel.findOne({username:req.body.username})
-  if (!user) res.status(400).send('The user does not exist')
+  if (!user) return res.status(400).send('The user does not exist')
 
   const validPassword = await bcrypt.compare(req.body.password, user.password)
-  if (!validPassword) res.status(400).send('Username or password is wrong')
+  if (!validPassword) return res.status(400).send('Username or password is wrong')
 
   const token = jwt.sign({_id:user._id, username: user.username}, env.jwtPrivateKey)
   const userInfo = {
     username:user.username,
     bearerToken:token,
-    password:user.password,
     email:user.email,
     plan:user.plan,
     fname:user.fname,

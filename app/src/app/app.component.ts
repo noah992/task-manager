@@ -48,6 +48,10 @@ export class AppComponent implements OnInit {
   }
   
   constructor(private router: Router, private state: StateService, private http: HttpClient) {
+    
+  }
+
+  ngOnInit() {
     this.state.updateUserProps.subscribe(data => {
       this.userProps = data
       this.nav = [
@@ -58,9 +62,6 @@ export class AppComponent implements OnInit {
       ]
       this.getBadge()
     })
-  }
-
-  ngOnInit() {
     this.userProps = false
     this.nav = [
       { page: 'Home', link: 'home' },

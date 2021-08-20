@@ -43,11 +43,12 @@ export class LoginComponent implements OnInit {
   }
 
   constructor(private state: StateService, private router: Router, private http: HttpClient) {
-    this.formUsername = new FormControl()
-    this.formPassword = new FormControl()
+    
   }
 
   ngOnInit(): void {
+    this.formUsername = new FormControl()
+    this.formPassword = new FormControl()
   }
 
 }

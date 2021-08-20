@@ -7,10 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserComponent implements OnInit {
   
-  tab:any
+  tab = 'lorem'
 
   constructor() {
-    this.tab = 'lorem'
   }
 
   ngOnInit(): void {

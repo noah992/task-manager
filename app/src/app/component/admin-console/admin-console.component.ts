@@ -94,6 +94,10 @@ export class AdminConsoleComponent implements OnInit {
   }
 
   constructor(private state: StateService, private http: HttpClient) {
+    
+  }
+
+  ngOnInit(): void {
     this.username = new FormControl()
     this.email = new FormControl()
     this.password = new FormControl()
@@ -102,9 +106,6 @@ export class AdminConsoleComponent implements OnInit {
       this.user = data
     })
     this.state.getUser()
-  }
-
-  ngOnInit(): void {
   }
 
 }
