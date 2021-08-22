@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
@@ -10,7 +10,7 @@ import { StateService } from 'src/app/shared/state.service';
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.css']
 })
-export class TaskComponent implements OnInit {
+export class TaskComponent implements OnInit, OnDestroy {
 
   task:any = {
     completed:false,
@@ -35,6 +35,7 @@ export class TaskComponent implements OnInit {
 
   // update when task completed
   completeTask(id:any) {
+    console.log(id)
     this.http.post(this.state.apiUrl+'tasks/completed', { id: id }).subscribe((data: any) => {
       this.task = {
         completed:[this.task.incompleted.find((item:any) => item.id == data.id), ...this.task.completed],
@@ -121,6 +122,10 @@ export class TaskComponent implements OnInit {
     this.state.updateUserProps.subscribe(data => {
       this.userProps = data
     })
+  }
+
+  ngOnDestroy() {
+    this.updateTask.unsubscribe()
   }
 
 }

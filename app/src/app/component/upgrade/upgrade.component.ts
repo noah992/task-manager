@@ -1,4 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { StateService } from 'src/app/shared/state.service';
 
 @Component({
   selector: 'app-upgrade',
@@ -7,9 +9,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UpgradeComponent implements OnInit {
 
-  constructor() { }
+  constructor(private state: StateService, private http: HttpClient) { }
   ngOnInit(): void {
-
+    
   }
 
 }

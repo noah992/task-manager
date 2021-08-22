@@ -5,6 +5,7 @@ import { MatDialog, } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { StateService } from 'src/app/shared/state.service';
 import { HttpClient } from '@angular/common/http';
+import ConfirmationInfo from './confirmationInfo';
 
 @Component({
   selector: 'app-payment',
@@ -20,7 +21,7 @@ export class PaymentComponent implements OnInit {
   // configure confirmation dialog
   openDialog(plan:string) {
     this.confirmationPage = true
-    const confirmationInfo = []
+    const confirmationInfo:ConfirmationInfo[] = []
     for (let item in this.form.value) {
       confirmationInfo.push({ label: item, value: this.form.controls[item].value })
     }

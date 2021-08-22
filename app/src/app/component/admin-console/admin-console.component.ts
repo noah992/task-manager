@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { StateService } from 'src/app/shared/state.service';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-console',
@@ -25,6 +26,7 @@ export class AdminConsoleComponent implements OnInit {
     currentIndex: 0,
     tab:'add',
     error:'',
+    passIncludeNum:false
   } // state for dom
 
   // button will be active when all forms are filled for add user tab
@@ -33,6 +35,11 @@ export class AdminConsoleComponent implements OnInit {
       this.domBool.isValidButton = true
     } else {
       this.domBool.isValidButton = false
+    }
+    if (this.password.value.split('').every((item:any) => isNaN(item))) {
+      this.domBool.passIncludeNum = false
+    } else {
+      this.domBool.passIncludeNum = true
     }
   }
 
@@ -47,15 +54,36 @@ export class AdminConsoleComponent implements OnInit {
 
   // create new user
   addUser() {
+    if (!this.domBool.passIncludeNum) {
+      this.domBool.isValidUsername = false
+      this.domBool.error = 'Password must include number'
+      return
+    }
+    if (this.username.value.length < 5) {
+      this.domBool.isValidUsername = false
+      this.domBool.error = 'Username must be longer than 4'
+      return
+    }
+    if (this.password.value.length < 5) {
+      this.domBool.isValidUsername = false
+      this.domBool.error = 'Password must be longer than 4'
+      return
+    }
+
     this.http.post(this.state.apiUrl+'users/signup', {username:this.username.value, password:this.password.value})
     .pipe(catchError(e => {
       this.domBool.isValidUsername = false
+      console.log(e)
       this.domBool.error = e.error
       return throwError(e)
     }))
     .subscribe((data:any) => {
       this.username.setValue('')
       this.password.setValue('')
+      this.domBool.error = ''
+      this.domBool.passIncludeNum = false
+      this.username.status = 'VALID'
+      this.password.status = 'VALID'
       this.state.updateUser.next(data)
     })
   }
@@ -93,17 +121,21 @@ export class AdminConsoleComponent implements OnInit {
     }
   }
 
-  constructor(private state: StateService, private http: HttpClient) {
+  constructor(private state: StateService, private http: HttpClient, private route: Router) {
     
   }
 
   ngOnInit(): void {
-    this.username = new FormControl()
-    this.email = new FormControl()
-    this.password = new FormControl()
+    this.username = new FormControl('', [Validators.required, Validators.minLength(5)])
+    this.email = new FormControl('', [Validators.required, Validators.email])
+    this.password = new FormControl('', [Validators.required, Validators.minLength(5)])
     this.user = this.state.user
     this.state.updateUser.subscribe((data:any) => {
       this.user = data
+    },
+    (e) => {
+      this.route.navigate(['login'])
+      console.log(e)
     })
     this.state.getUser()
   }

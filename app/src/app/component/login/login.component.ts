@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { StateService } from 'src/app/shared/state.service';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-login',
@@ -37,7 +38,8 @@ export class LoginComponent implements OnInit {
     }))
     .subscribe((data:any) => {
       localStorage.setItem('BearerToken', data.bearerToken)
-      this.state.updateUserProps.next(data)
+      const decode = jwt_decode(data.bearerToken!)
+      this.state.updateUserProps.next(decode)
       this.router.navigate(['home'])
     })
   }

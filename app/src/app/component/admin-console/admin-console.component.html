@@ -25,14 +25,27 @@
                         <mat-form-field appearance='outline'>
                             <mat-label>username</mat-label>
                             <input matInput [formControl]='username' (keyup)='switchActiveButton()' #addUsername>
-                            <mat-hint [ngStyle]='{ color: addUsername.value.length < 5 ? "grey" : "black" }'>Min 5 characters: {{addUsername.value.length}} / 5</mat-hint>
+                            <mat-hint [ngStyle]='{ color: addUsername.value.length < 5 ? "grey" : "rgb(50, 200, 50)" }'>
+                                <ng-container *ngIf='addUsername.value.length >= 5'>✅</ng-container>
+                                Min 5 characters: {{addUsername.value.length}} / 5
+                            </mat-hint>
                         </mat-form-field>
                         <mat-form-field appearance='outline'>
                             <mat-label>password</mat-label>
                             <input matInput [formControl]='password' (keyup)='switchActiveButton()' #addPassword>
-                            <mat-hint [ngStyle]='{ color: addPassword.value.length < 5 ? "grey" : "black" }'>Min 5 characters: {{addPassword.value.length}} / 5</mat-hint>
+                            <mat-hint>
+                                <div class="form-hint">
+                                    <ng-container *ngIf='addPassword.value.length >= 5'>✅</ng-container>
+                                    <p [ngStyle]='{ color: addPassword.value.length < 5 ? "grey" : "rgb(50, 200, 50)" }'>Min 5 characters: {{addPassword.value.length}} / 5</p>
+                                </div>
+                                <div class="form-hint">
+                                    <ng-container *ngIf='domBool.passIncludeNum'>✅</ng-container>       
+                                    <p [ngStyle]='{ color: !domBool.passIncludeNum ? "grey" : "rgb(50, 200, 50)" }'>Include number</p>
+                                </div>
+                            </mat-hint>
                         </mat-form-field>
                     </div>
+                    
                     <div class="button-wrapper">
                         <button mat-raised-button color='primary' (click)='addUser()' [disabled]='!domBool.isValidButton'>Add</button>
                     </div>

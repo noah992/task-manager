@@ -87,6 +87,14 @@
     color: red;
 }
 
+.button-wrapper {
+    padding: 1rem 0;
+}
+
+.form-hint {
+    display: flex;
+}
+
 @media (max-width: 1500px) {
     .admin-console-container {
         flex-direction: column;

@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   Router, Resolve,
@@ -13,8 +14,8 @@ import { StateService } from './state.service';
   providedIn: 'root'
 })
 export class UpgradeResolver implements Resolve<boolean> {
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    return of(this.state.userProps);
+  async resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.state.userInfo
   }
 
   constructor(private state: StateService) {

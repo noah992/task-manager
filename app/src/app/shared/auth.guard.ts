@@ -1,4 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { StateService } from './state.service';
@@ -16,17 +16,10 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-      if (route.url) {
-        if (route.url.find(item => item.path == 'admin')) {
-          return this.userProps.username == 'admin' ? true : false
-        } else if (route.url.find(item => item.path == 'user')) {
-          return this.userProps.username ? true : false
-        } else {
-          return true
-        }
-      } else {
-        return this.userProps.username ? false : true
-      }
+      if (state.url.includes('admin-console')) return this.userProps.isAdmin ? true : false
+      if (state.url.includes('task')) return this.userProps.claim[route.data.claimType] ? true : false
+      if (state.url.includes('user')) return this.userProps.username ? true : false
+      return true
   }
 
   constructor(private state: StateService) {

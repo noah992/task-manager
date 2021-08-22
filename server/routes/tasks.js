@@ -102,7 +102,6 @@ router.delete('/', auth, async function(req, res, next) {
 // when task completed
 router.post('/completed', auth, async function(req, res, next) {
     const taskId = req.body.id
-    console.log(req.body)
     await updateTask(taskId, {completed:true})
     res.send({id:req.body.id})
 })
